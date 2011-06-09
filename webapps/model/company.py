@@ -49,5 +49,21 @@ class CompanyRegion(Storm):
 
     #References
     division = Reference(division_id, 'CompanyDivision.id')
+    areas = ReferenceSet(id, 'CompanyArea.region_id')
 
 
+class CompanyArea(Storm):
+    """
+    A area can only have one region
+    """
+
+    __storm_table__ = 'areas'
+
+    #ID's
+    id = Int(primary=True)
+    region_id = Int()
+
+    #Text
+    title = Unicode(validator=unicoder)
+
+    region = Reference(region_id, 'CompanyRegion.id')

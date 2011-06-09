@@ -7,53 +7,54 @@
     </select>
 </div>
 
-<table class="report_table">
+<div id="company_selection">
     [[ for company in selected_client.companies ]]
-        <tr class="[- loop.cycle('grey', '') -]">
-            <td class="left">
-                <div class="expand_company"> <span class="green_bold">[- company.title -]</span></div>
-            </td>
-            <td class="right">
-                <input type="checkbox">
-            </td>
-        </tr>
+        <div class="coll_title [- loop.cycle("grey", "") -]">
+            [[ if company.divisions.count() > 0 ]]
+                <span class="coll_arrows closed">&nbsp;</span>
+            [[ else ]]
+                <span class="arrow_spacer"></span>
+            [[ endif ]]
+            <span class="green_bold company_title">[- company.title|e -]</span>
+            <span class="float_checkbox"><input class="cbox" name="comp_cbox" type="checkbox"></span>
+        </div>
+        <div class="collapsable">
+        
         [[ for division in company.divisions ]]
-            <tr class="division">
-                <td class="left">
-                    <div class="sub_division_left">[- division.title -]</div>
-                </td>
-                <td class="right">
-                    <div class="sub_division_right"> <input type="checkbox"> </div>
-                </td>
-            </tr>
+            <div class="coll_title light_grey">
+                [[ if division.regions.count() > 0 ]]
+                    <span class="coll_arrows closed">&nbsp;</span>
+                [[ else ]]
+                    <span class="arrow_spacer"></span>
+                [[ endif ]]
+                <span class="division_title">[- division.title|e -]</span>
+                <span class="float_checkbox"><input class="cbox" type="checkbox"></span>
+            </div>
+            <div class="collapsable">
+                
             [[ for region in division.regions ]]
-                <tr class="region">
-                    <td class="left">
-                        <div class="sub_region_left"> [- region.title -] </div>
-                    </td>
-                    <td class="right">
-                        <div class="sub_region_right"> <input type="checkbox"> </div>
-                    </td>
-                </tr>
+                <div class="coll_title">
+                    [[ if region.areas.count() > 0 ]]
+                        <span class="coll_arrows closed">&nsp;</span>
+                    [[ else ]]
+                        <span class="arrow_spacer"></span>
+                    [[ endif ]]
+                    <span class="region_title">[- region.title|e -]</span>
+                    <span class="float_checkbox"><input class="cbox" type="checkbox"></span>
+                </div>
+                <div class="collapsable">
+                    
+                [[ for area in region.areas ]]
+                    <div class="coll_title">
+                        <span class="area_title">[- area.title|e -]</span>
+                        <span class="float_checkbox"><input class="cbox" type="checkbox"></span>
+                    </div>
+                [[ endfor ]]
+                </div>
             [[ endfor ]]
+            </div> 
         [[ endfor ]]
+        </div>
     [[ endfor ]]
-    <tr>
-        <td class="left" colspan="2">
-            <span>Options</span>
-            <span class="green"><hr></hr></span>
-        </td>
-    </tr>
-    <tr class="grey">
-        <td class="left">
-            <span class="green">Display Options:</span>
-        </td>
-        <td class="right">
-            <select>
-                <option>Combined</option>
-                <option>Seperate</option>
-            </select>
-        </td>
-    </tr>
-</table>
+</div>
 

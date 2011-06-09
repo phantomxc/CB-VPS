@@ -22,26 +22,71 @@ table.report_table tr.grey {
 }
 
 
-table.report_table tr.division {
-    background-color:#EDEDED;
-}
-table.report_table tr.division div.sub_division_left {
-    padding: 2px 2px 2px 25px;
-}
-
-table.report_table tr.division div.sub_division_right {
-    padding: 2px 15px 2px 2px;
-}
-
-table.report_table tr.region div.sub_region_left {
-    padding: 2px 2px 2px 35px;
-}
-
-table.report_table tr.region div.sub_region_right {
-    padding: 2px 35px 2px 2px;
-}
-
 div.half_tab_padding {
     padding: 5px 15px 5px 15px;
 }
 
+#company_selection {
+    width:100%;
+}
+
+div.collapsable {
+    width:100%;
+}
+
+div.coll_title {
+    width:100%;
+    padding: 2px 0px 2px 0px;
+}
+
+
+div.grey {
+    background-color:#CCC;
+}
+
+div.light_grey {
+    background-color:#EDEDED;
+}
+
+div.coll_title span.float_checkbox {
+    float:right;
+    margin-right:15px;
+    z-index:10;
+}
+
+div.coll_title span.company_title {
+    padding: 2px 2px 2px 0px;
+}
+div.collapsable span.division_title {
+    padding: 2px 2px 2px 15px;
+}
+div.collapsable span.region_title {
+    padding: 2px 2px 2px 35px;
+}
+div.collapsable span.area_title {
+    padding: 2px 2px 2px 55px;
+}
+
+span.coll_arrows {
+    display:inline-block;
+    cursor:pointer;
+    width:25px;
+    height:15px;
+}
+
+span.coll_arrows.open {
+    background-image:url('/static/img/arrow_open.png');
+    background-repeat:no-repeat;
+    background-position:6px 1px;
+}
+
+span.coll_arrows.closed {
+    background-image:url('/static/img/arrow_closed.png');
+    background-repeat:no-repeat;
+    background-position:6px 0px;
+}
+
+
+span.arrow_spacer {
+    padding-left:30px;
+}
