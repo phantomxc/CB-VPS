@@ -1,0 +1,47 @@
+
+table.report_table {
+    width:100%;
+    border-collapse:collapse;
+    margin-bottom:20px;
+}
+
+
+table.report_table td.left {
+    width:90%;
+    padding:2px 2px 2px 15px;
+}
+
+table.report_table td.right {
+    width:10%;
+    text-align:right;
+    padding:2px 15px 2px 2px;
+}
+
+table.report_table tr.grey {
+    background-color:#CCC;
+}
+
+
+table.report_table tr.division {
+    background-color:#EDEDED;
+}
+table.report_table tr.division div.sub_division_left {
+    padding: 2px 2px 2px 25px;
+}
+
+table.report_table tr.division div.sub_division_right {
+    padding: 2px 15px 2px 2px;
+}
+
+table.report_table tr.region div.sub_region_left {
+    padding: 2px 2px 2px 35px;
+}
+
+table.report_table tr.region div.sub_region_right {
+    padding: 2px 35px 2px 2px;
+}
+
+div.half_tab_padding {
+    padding: 5px 15px 5px 15px;
+}
+

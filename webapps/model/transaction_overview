@@ -1,0 +1,100 @@
+
+Transaction:
+    - Client                                 (Client Reference)
+    - Company Name
+    - Division
+    - Region (Division & Region need to be separate)
+    - Transaction Manager                    (Employee Reference)
+    - Foreign Transaction Manager
+    - Survey                                 (Survey Reference)
+    - Property                               (Property Reference)
+    - Type (New Lease, Lease Extension, Purchase)
+
+    -----------------------Acquisitions----------------------
+    New Lease:
+        - trans_id
+        - Old Square Footage
+        - New Square Footage
+        - Engagement Date
+        - RFP On Time (Y/N)
+        - LOI Date
+        - Lease Execution Date
+        - Market Survey (Y/N)
+        - If yes, Market Survey Date, if no, N/A
+        - Value Add %
+        - Average Base Rent
+
+    Lease Extension:
+        - trans_id
+        - Old Square Footage
+        - New Square Footage
+        - Engagement Date
+        - RFP On Time (Y/N)
+        - LOI Date
+        - Lease Execution Date
+        - Market Survey (Y/N)
+        - If yes, Market Survey Date, if no, N/A
+        - Value Add %
+        - Average Base Rent
+
+    Purchase:
+        - trans_id
+        - Old Square Footage
+        - New Square Footage
+        - Engagement Date
+        - RFP On Time (Y/N)
+        - LOI Date
+        - Purchase Close Date
+        - Market Survey (Y/N)
+        - If yes, Market Survey Date, if no, N/A
+        - Value Add %
+        - Purchase Price
+    -----------------------Dispositions----------------------
+
+    Sublease:
+        - trans_id
+        - Sublease Sq Ft
+        - Engagement Date
+        - LOI Date
+        - Sublease Execution Date
+        - BOV (Y/N)
+        - BOV Date
+        - BOV On Time (Y/N)
+        - Expected Timing (Months)
+        - Actual Timing (Months)
+        - Meet/Outperform Timing (Y/N)
+        - Expected Recovery ($ amount)
+        - Actual Recovery ($ amount)
+        - Meet/Outperform Expected Recovery (Y/N)
+
+    Lease Termination:
+        - trans_id
+        - Lease Termination Sq Ft
+        - Engagement Date
+        - LOI Date
+        - Lease Termination Document Execution Date
+        - BOV (Y/N)
+        - BOV Date
+        - BOV On Time (Y/N)
+        - Expected Timing (Months)
+        - Actual Timing (Months)
+        - Meet/Outperform Timing (Y/N)
+        - Expected Recovery ($ amount)
+        - Total Savings($ amount)
+        - Meet/Outperform Expected Recovery (Y/N)
+    
+    Sale:
+        - trans_id
+        - Sale Sq Ft
+        - Engagement Date
+        - LOI Date
+        - Sale Closing Date
+        - BOV (Y/N)
+        - BOV Date
+        - BOV On Time (Y/N)
+        - Expected Timing (Months)
+        - Actual Timing (Months)
+        - Meet/Outperform Timing (Y/N)
+        - Expected Recovery ($ amount)
+        - Sale Price ($ amount)
+        - Meet/Outperform Expected Recovery (Y/N)

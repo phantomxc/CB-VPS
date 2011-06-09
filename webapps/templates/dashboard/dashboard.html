@@ -1,0 +1,68 @@
+[[ set jsfiles = ['/static/js/dashboard.js', '/static/js/tabs.js'] + jsfiles|d([]) ]]
+[[ set cssfiles = ['/static/css/dashboard.css'] + cssfiles|d([]) ]]
+[[ set prototype = True ]]
+[[ extends 'base.html' ]]
+[[ block title]] Dashboard [[ endblock ]]
+[[ block content ]]
+    <div id="content_container">
+        <h4>Performance Metrics</h4>
+        <table width="100%">
+            <tr>
+                <td width="45%" align="center" valign="top">
+                    <div class="base_tabs half_tabs">
+                        <div id="left_tabs" class="tab_container">
+                        </div>
+                        <div id="lloading" class="tab_content">
+                        </div>
+                        <div id="acq" class="tab_content">
+                            <table class="report_table">
+                                <tr>
+                                    <td class="left">Average Survey Score</td>
+                                    <td class="right">4.9</td>
+                                </tr>
+                                <tr class="grey">
+                                    <td class="left">Average Value Add %</td>
+                                    <td class="right">40%</td>
+                                </tr>
+                                <tr>
+                                    <td class="left">Square Footage Reduction</td>
+                                    <td class="right">1000</td>
+                                </tr>
+                                <tr class="grey">
+                                    <td class="left">Average Days to Business Terms</td>
+                                    <td class="right">45</td>
+                                </tr>
+                                <tr>
+                                    <td class="left">Avearge Days between Business Terms & Closing</td>
+                                    <td class="right">120</td>
+                                </tr>
+                                <tr class="grey">
+                                    <td class="left">Markey Survey On Time %</td>
+                                    <td class="right">80%</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div id="disp" class="tab_content">
+                        </div>
+                        <div id="graphs" class="tab_content">
+                        </div>
+                    </div>
+                </td>
+                <td width="10"> &nbsp; </td>
+                <td width="45%" align="center" valign="top">
+                    <div class="base_tabs half_tabs">
+                        <div id="right_tabs" class="tab_container">
+                        </div>
+                        <div id="rloading" class="tab_content">
+                        </div>
+                        <div id="companies" class="tab_content">
+                        </div>
+                        <div id="filters" class="tab_content">
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <div class="clearer"></div>
+    </div>
+[[ endblock ]]

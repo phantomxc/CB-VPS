@@ -1,0 +1,219 @@
+[[ set jsfiles = ['/static/js/transactions.js', '/static/js/tabs.js', '/static/js/autocomplete.js'] + jsfiles|d([]) ]]
+[[ set cssfiles = ['/static/css/transactions.css'] + cssfiles|d([]) ]]
+[[ set prototype = True ]]
+[[ extends 'base.html' ]]
+[[ block title]] Transaction Manager[[ endblock ]]
+
+[[ block content ]]
+    <div id="content_container">
+        <h4>Transactions Manager</h4>
+        <div class="base_tabs full_tabs">
+            <div id="tab_container" class="tab_container">
+            </div>
+            <div id="add_trans" class="tab_content">
+            <form method="POST" action="addtrans" enctype="multipart/form-data">
+                <div class="padding">
+                    <table width="100%">
+                        <tr>
+                            <td width="50%" valign="top">
+                                <!-- START TRANSACTION OVERVIEW -->
+                                <div id="trans_overview">
+                                    <span class="green_bold">Transaction Overview</span><img class="greenbar" src="/static/img/greenbar.jpg"> 
+                                    <br /><br >
+                                    <table class="form">
+                                        <tr>
+                                            <td class="label">Transaction Type: </td>
+                                            <td class="input">
+                                                <select name="ttpe" id="trans_type">
+                                                    <option>Select One</option>
+                                                    <option>New Lease</option>
+                                                    <option>Lease Extension</option>
+                                                    <option>Purchase</option>
+                                                    <option>Sublease</option>
+                                                    <option>Lease Termination</option>
+                                                    <option>Sale</option>
+                                                </select>
+                                            </td>
+                                            <td class="options"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="label">Client: </td>
+                                            <td class="input" id="cid" next="coid" ajax="request/companies">
+                                                <select class="select" name="cid">
+                                                    <option>Select One</option>
+                                                    [[ for client in clients ]]
+                                                        <option value="[- client.id -]">[- client.email -]</option></otion>
+                                                    [[ endfor ]]
+
+                                            </td>
+                                            <td class="options"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="label" id="coid" next="did" ajax="request/divisions">Company: </td>
+                                            <td class="input">
+                                                <select class="select" name="coid">
+                                                    <option>N/A</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="label" id="did" next="rid" ajax="request/regions">Division: </td>
+                                            <td class="input">
+                                                <select class="select" name="did">
+                                                    <option>N/A</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="label" id="rid" next="aid" ajax="request/areas">Region: </td>
+                                            <td class="input">
+                                                <select class="select" name="rid">
+                                                    <option>N/A</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="label" id="aid" next="none" ajax="none">Area: </td>
+                                            <td class="input">
+                                                <select class="select" name="aid">
+                                                    <option>N/A</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="label">
+                                                Transaction Manager:
+                                            </td>
+                                            <td class="input">
+                                                <select name="tman">
+                                                    [[ for emp in employees ]]
+                                                        <option value="[- emp.id -]">[- emp.fname -] [- emp.lname -]</option>
+                                                    [[ endfor ]]
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="label">
+                                                Client Transaction Manager:
+                                            </td>
+                                            <td class="input">
+                                                <input name="ctman" type="text" id="client_transaction_manager">
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <br />
+                                <!-- START PROPERTY DETAILS -->
+                                <div>
+                                    <span class="green_bold">Property Details</span><img class="greenbar" src="/static/img/greenbar.jpg">
+                                    <br /><br />
+                                    <table class="form" id="property_search">
+                                        <tr>
+                                            <td class="label">Property Search: </td>
+                                            <td class="input">
+                                                <input type="input" name="q" id="property_query">
+                                                <input type="hidden" id="property_search_result" name="pid" value="">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>&nbsp;</td>
+                                            <td>&nbsp;</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="label">
+                                                <input type="button" value="New Property" id="new_property">
+                                            </td>
+                                            <td>&nbsp;</td>
+                                        </tr>
+                                    </table>
+                                    <table class="form" id="new_property_table" style="display:none;">
+                                        <tr>
+                                            <td class="label">
+                                                Address:
+                                            </td>
+                                            <td class="input">
+                                                <input type="text" name="addr">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="label">
+                                                City:
+                                            </td>
+                                            <td class="input">
+                                                <input type="text" name="cty">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="label">
+                                                State:
+                                            </td>
+                                            <td class="input">
+                                                <input type="text" name="st">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="label">
+                                                Zipcode:
+                                            </td>
+                                            <td class="input">
+                                                <input type="text" name="zip">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="label">
+                                                Total Square Feet:
+                                            </td>
+                                            <td class="input">
+                                                <input type="text" name="sqft">
+                                            </td>
+                                        </tr>
+                                        
+                                    </table>
+
+                                </div>
+                            </td>
+                            <td width="50%" valign="top">
+                                <!-- START TRANSACTION DETAILS -->
+                                    <span class="green_bold">Transaction Details</span><img class="greenbar" src="/static/img/greenbar.jpg">
+                                    <br /><br />
+                                <div id="trans_details">
+                                </div>
+                                <br />
+                                <!-- START SURVEY -->
+                                <div id="survey">
+                                    <span class="green_bold">Performance Survey</span><img class="greenbar" src="/static/img/greenbar.jpg">
+                                    <br /><br />
+                                    <table class="form">
+                                        <tr>
+                                            <td class="label">Survey Sent</td>
+                                            <td class="input"><input type="text" name="survey_sent"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="label">Attach Survey</td>
+                                            <td class="input"><input type="file" name="survey_attached"></td>
+                                        </tr>
+                                    </table>
+                                    <br />
+                                    <br />
+                                    <input style="float:right;" type="submit" value="Add Transaction">
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                </form>
+            </div>
+            
+            <div id="edit_trans" class="tab_content">
+                Tab content
+            </div>
+            <div id="metrics" class="tab_content">
+                Tab content
+            </div>
+            <div id="properties" class="tab_content">
+                Tab content
+            </div>
+        </div>
+        <div class="clearer"></div>
+    </div>
+[[ endblock ]]

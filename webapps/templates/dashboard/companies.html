@@ -1,0 +1,59 @@
+<div class="half_tab_padding">
+    Clients:<br />
+    <select>
+    [[ for client in clients ]]
+        <option value="[- client.id -]" [- 'SELECTED="SELECTED"' if selected_client.id == client.id -] >[- client.email -]</option> 
+    [[ endfor ]]
+    </select>
+</div>
+
+<table class="report_table">
+    [[ for company in selected_client.companies ]]
+        <tr class="[- loop.cycle('grey', '') -]">
+            <td class="left">
+                <div class="expand_company"> <span class="green_bold">[- company.title -]</span></div>
+            </td>
+            <td class="right">
+                <input type="checkbox">
+            </td>
+        </tr>
+        [[ for division in company.divisions ]]
+            <tr class="division">
+                <td class="left">
+                    <div class="sub_division_left">[- division.title -]</div>
+                </td>
+                <td class="right">
+                    <div class="sub_division_right"> <input type="checkbox"> </div>
+                </td>
+            </tr>
+            [[ for region in division.regions ]]
+                <tr class="region">
+                    <td class="left">
+                        <div class="sub_region_left"> [- region.title -] </div>
+                    </td>
+                    <td class="right">
+                        <div class="sub_region_right"> <input type="checkbox"> </div>
+                    </td>
+                </tr>
+            [[ endfor ]]
+        [[ endfor ]]
+    [[ endfor ]]
+    <tr>
+        <td class="left" colspan="2">
+            <span>Options</span>
+            <span class="green"><hr></hr></span>
+        </td>
+    </tr>
+    <tr class="grey">
+        <td class="left">
+            <span class="green">Display Options:</span>
+        </td>
+        <td class="right">
+            <select>
+                <option>Combined</option>
+                <option>Seperate</option>
+            </select>
+        </td>
+    </tr>
+</table>
+

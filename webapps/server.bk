@@ -1,0 +1,13 @@
+from webpy.dark import *
+import web
+urls = (
+    '/', 'hello',
+)
+
+class hello:
+    def GET(self):
+        db = get_db()
+        res = db.query('''SELECT * FROM property_details''')
+        return jrender('test.html', {'results':res})
+
+application = web.application(urls, globals()).wsgifunc()

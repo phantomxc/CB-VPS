@@ -1,0 +1,142 @@
+body, div, table, td, tr, th, span, label, img {
+    margin:0px;
+    padding:0px;
+}
+
+body {
+    font-family:Arial, Helvetica, sans-serif !important;
+}
+.clearer {
+    clear:both;
+}
+
+span.green {
+    color:#006b54;
+}
+
+span.green_bold {
+    color:#006b54;
+    font-weight:bold;
+}
+
+
+#header {
+    background-color:#006b54;
+    width:100%;
+    height:76px;
+    -moz-box-shadow: 0px 6px 6px #888;
+    -webkit-box-shadow: 0px 6px 6px #888;
+    box-shadow: 0px 6px 6px #888;
+}
+
+#header table {
+    width:100%;
+    height:76px;
+}
+
+#header table td.logo {
+    width:200px;
+}
+
+#top_menu li {
+    display:inline-block;
+    position:relative;
+    height:35px;
+    color:white;
+    border-right:1px solid #FFF;
+    font-size:21px;
+    padding:10px 10px 0px 10px;
+}
+
+#top_menu a {
+    color:white;
+    text-decoration:none;
+}
+
+#top_menu a:hover {
+    color:white;
+    text-decoration:underline;
+}
+
+#content_container {
+    width:1180px;
+    margin:0 auto;
+}
+/*----------------- TABS -----------------*/
+
+div.base_tabs {
+    background-color:#006b54;
+    padding:11px 10px 10px 10px;
+    margin:0px;
+    -moz-border-radius: 5px 5px 5px 5px;
+    -webkit-border-radius: 5px 5px 5px 5px;
+    -khtml-border-radius: 5px 5px 5px 5px;
+    border-radius: 5px 5px 5px 5px;
+    
+}
+
+div.base_tabs ul {
+    list-style:none outside none;
+    padding:0px;
+    padding-bottom:24px;
+    margin:0px;
+}
+
+div.base_tabs ul li {
+    float:left;
+    position:relative;
+    text-align:center;
+    display:inline;
+    cursor:pointer;
+    padding:2px 5px 0px 5px;
+    margin:0px 8px 0px 0px;
+}
+
+div.half_tabs ul li {
+    height:22px;
+    width:95px;
+}
+
+div.full_tabs ul li {
+    height:22px;
+    width:126px;
+}
+
+div.base_tabs ul li.dormant {
+    background-color:#3f8c7c;
+    color:white;
+    -moz-border-radius: 5px 5px 0px 0px;
+    -webkit-border-radius: 5px 5px 0px 0px;
+    -khtml-border-radius: 5px 5px 0px 0px;
+    border-radius: 5px 5px 0px 0px;
+}
+div.base_tabs ul li.dormant:hover {
+    background-color:#145b4d;
+}
+
+div.base_tabs ul li.active {
+    background-color:white;
+    color:black;
+    -moz-border-radius: 5px 5px 0px 0px;
+    -webkit-border-radius: 5px 5px 0px 0px;
+    -khtml-border-radius: 5px 5px 0px 0px;
+    border-radius: 5px 5px 0px 0px;
+}
+
+div.base_tabs div.tab_content {
+    background-color:white;
+    color:black;
+    width:100%;
+    min-height:400px;
+    text-align:left;
+    padding-top: 10px;
+    -moz-border-radius: 0px 5px 5px 5px;
+    -webkit-border-radius: 0px 5px 5px 5px;
+    -khtml-border-radius: 0px 5px 5px 5px;
+    border-radius: 0px 5px 5px 5px;
+}
+
+div.base_tabs div.padding {
+    padding:10px 0px 10px 10px;
+}
+
