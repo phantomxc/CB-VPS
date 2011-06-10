@@ -3,12 +3,15 @@ from storm.locals import *
 from model.customer import User
 from model.users import *
 from model.company import *
+from model.report import Report
+
 
 urls = (
     '', 'dash',
     '/', 'dash',
     'companies', 'dashCompanies',
-    'filters', 'dashFilters'
+    'filters', 'dashFilters',
+    'report', 'buildReport',
 )
 
 class dash:
@@ -18,7 +21,10 @@ class dash:
         return jrender('/dashboard/dashboard.html', {'clients':clients})
 
 
+
 class dashCompanies:
+
+
     def POST(self):
         i = web.input()
         store = get_store()
@@ -36,7 +42,10 @@ class dashCompanies:
         })
 
 
+
 class dashFilters:
+
+
     def POST(self):
         i = web.input()
         active_tab = i.get('left_active_tab', None)
@@ -45,6 +54,20 @@ class dashFilters:
             return jrender('/filters/acq_filters.html')
         elif active_tab == 'Dispositions':
             return jrender('/filters/disp_filters.html')
+
+
+
+class buildReport:
+    
+    
+    def POST(self):
+        i = web.input(comp_cbox=[], div_cbox=[], reg_cbox=[], area_cbox=[])
+
+        report = Report(companies=i.comp_cbox, divisions=i.div_cbox, regions=i.reg_cbox, areas=i.area_cbox, trans_obj=i.trans_obj)
+        report.buildReport()
+        return jrender('/dashboard/report.html', {'report':report})
+        
+
 
 def session_auth():
     '''

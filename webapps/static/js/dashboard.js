@@ -72,6 +72,7 @@ Dashboard.prototype = {
     // SCRIPTIFY RIGHT TABS
     scriptifyCompanies: function(li) {
         this.collapsables(li.content);    
+        this.setupForm();
     },
     
     // Make the companies tab collapsables
@@ -104,6 +105,22 @@ Dashboard.prototype = {
                 });
             });
         });
+    },
+
+    setupForm: function() {
+        Event.observe('dashboard_form', 'submit', function(event) {
+            var act = (this.ltabs.chosen == this.ltabs.t1) ? 'acquisition': 'disposition';
+            var act_div = (this.ltabs.chosen == this.ltabs.t1) ? $('acq') : $('disp');
+            $('dashboard_form').request({
+                parameters: {'trans_obj':act},
+                onSuccess: function(res) {
+                    act_div.update(res.responseText);
+                }
+            });
+            act_div.update('Loading');
+            
+            Event.stop(event);
+        }.bind(this));
     },
 
     scriptifyFilters: function(li) {

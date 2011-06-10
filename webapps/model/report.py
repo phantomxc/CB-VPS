@@ -3,7 +3,7 @@ from storm.expr import And
 
 from webpy.dark import *
 from model.company import *
-from model.transaction import *
+from model.trans2 import *
 from model.users import *
 
 from itertools import izip
@@ -14,19 +14,19 @@ class Report(Storm):
     I represent a report generated off the Dashboard
     """
 
-    def __init__(self, companies=[], divisions=[], regions=[], trans_obj='acquisition', **kwargs):
+    def __init__(self, companies=[], divisions=[], regions=[], areas=[], trans_obj='acquisition', **kwargs):
         """
         Build the base object
         """
         self.store = get_store() 
-        self.companies = companies
-        self.divisions = divisions
-        self.regions = regions
-       
-        if trans_obj == 'acquisition':
-            self.trans_obj = Acquisition
-        elif trans_obj == 'disposition':
-            self.trans_obj = Disposition
+        self.companies = [int(id) for id in companies]
+        self.divisions = [int(id) for id in divisions]
+        self.regions = [int(id) for id in regions]
+        self.areas = [int(id) for id in areas]
+        self.acq_types = [u'New Lease', u'Lease Extension', u'Purchase']
+        self.disp_types = [u'Sublease', u'Lease Termination', u'Sale']
+
+        self.trans_obj = trans_obj
 
         if 'filters' in kwargs:
             self.filters = kwargs['filters']
@@ -40,10 +40,16 @@ class Report(Storm):
         if self.companies:
             self.trans = self.store.find(Transaction, Transaction.company_id.is_in(self.companies))
         if self.divisions:
-            self.trans = trans.find(Transaction.division_id.is_in(self.divisions))
+            self.trans = self.trans.find(Transaction.division_id.is_in(self.divisions))
         if self.regions:
-            self.trans = trans.find(Transaction.region_id.is_in(self.regions))
-
+            self.trans = self.trans.find(Transaction.region_id.is_in(self.regions))
+        if self.areas:
+            self.trans = self.trans.find(Transaction.area_id.is_in(self.areas))
+        
+        if self.trans_obj == 'acquisition':
+            self.trans = self.trans.find(Transaction.trans_type.is_in(self.acq_types))
+        else:
+            self.trans = self.trans.find(Transaction.trans_type.is_in(self.disp_types))
 
         if self.filters:
             self.exp = self.buildExp(self.trans_obj, 
@@ -78,7 +84,7 @@ class Report(Storm):
         if 'Int' in str(type(t)):
             return int(a)
         if 'Date' in str(type(t)):
-            y, m, d = map(int, a.split('-'))
+            m, d, y = map(int, a.split('-'))
             return date(y, m, d)
 
     def buildAndOr(self, op, baseExp, joiner):

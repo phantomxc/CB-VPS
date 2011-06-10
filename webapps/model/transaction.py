@@ -90,7 +90,7 @@ class Disposition(Transaction):
     #Sublease
     expected_recovery = Decimal()
     actual_recovery = Decimal()
-    sublease_execution_date Date()
+    sublease_execution_date = Date()
     
     #Lease Termination
     expected_savings = Decimal()

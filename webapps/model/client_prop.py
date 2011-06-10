@@ -1,7 +1,7 @@
 from webpy.dark import *
 from storm.locals import *
 
-class ClientProperty(object):
+class ClientProperty(Storm):
     """
     I represent a property
     """

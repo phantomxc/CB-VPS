@@ -16,7 +16,7 @@
                 <span class="arrow_spacer"></span>
             [[ endif ]]
             <span class="green_bold company_title">[- company.title|e -]</span>
-            <span class="float_checkbox"><input class="cbox" name="comp_cbox" type="checkbox"></span>
+            <span class="float_checkbox"><input class="cbox" name="comp_cbox" type="checkbox" value="[- company.id -]"></span>
         </div>
         <div class="collapsable">
         
@@ -28,7 +28,7 @@
                     <span class="arrow_spacer"></span>
                 [[ endif ]]
                 <span class="division_title">[- division.title|e -]</span>
-                <span class="float_checkbox"><input class="cbox" type="checkbox"></span>
+                <span class="float_checkbox"><input class="cbox" name="div_cbox" type="checkbox" value="[- division.id -]"></span>
             </div>
             <div class="collapsable">
                 
@@ -40,14 +40,14 @@
                         <span class="arrow_spacer"></span>
                     [[ endif ]]
                     <span class="region_title">[- region.title|e -]</span>
-                    <span class="float_checkbox"><input class="cbox" type="checkbox"></span>
+                    <span class="float_checkbox"><input class="cbox" type="checkbox" name="reg_cbox" value="[- region.id -]"></span>
                 </div>
                 <div class="collapsable">
                     
                 [[ for area in region.areas ]]
                     <div class="coll_title">
                         <span class="area_title">[- area.title|e -]</span>
-                        <span class="float_checkbox"><input class="cbox" type="checkbox"></span>
+                        <span class="float_checkbox"><input class="cbox" type="checkbox" name="area_cbox" value="[- area.id -]"></span>
                     </div>
                 [[ endfor ]]
                 </div>
@@ -56,5 +56,10 @@
         [[ endfor ]]
         </div>
     [[ endfor ]]
+</div>
+
+<div>
+    <br />
+    <input id="run_report" style="float:right; margin-right:15px;" type="submit" value="Run Report">
 </div>
 

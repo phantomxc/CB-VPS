@@ -3,11 +3,8 @@ from storm.locals import *
 from model.customer import User
 from model.users import *
 from model.company import *
-from model.property import ClientProperty
+from model.client_prop import ClientProperty
 from model.trans2 import *
-
-import json
-
 
 urls = (
     '', 'trans',
@@ -16,18 +13,6 @@ urls = (
     'propertysearch/', 'propertySearch',
     'get_trans_details', 'transactionDetails',
 )
-
-
-def return_json(obj, status="200 OK"):
-    """
-    Return the obj as json
-    """
-
-    ret = json.dumps(obj)
-    web.status = status
-    web.header('Content-Type', 'application/json')
-    web.header('Content-Length', len(ret))
-    return ret
 
 class trans:
     def GET(self):

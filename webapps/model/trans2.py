@@ -1,5 +1,6 @@
 from webpy.dark import *
 from storm.locals import *
+from model.client_prop import ClientProperty
 
 class Transaction(Storm):
     """
@@ -26,7 +27,7 @@ class Transaction(Storm):
     rebc_entry_date = Date(validator=datify)    
     
     #References
-    prop = Reference(property_id, 'Property.id')
+    prop = Reference(property_id, 'ClientProperty.id')
     survey = Reference(survey_id, 'Zoom.id')
 
     def __init__(self):
