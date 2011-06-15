@@ -17,7 +17,7 @@ Dashboard.prototype = {
         var rtabs = new Tabs('right_tabs');
         this.rtabs = rtabs;
         this.rtabs.t1 = rtabs.addTab('Companies', 'companies', 'companies', function(){ return{};}, this.scriptifyCompanies.bind(this));
-        this.rtabs.t2 = rtabs.addTab('Filters', 'acq_filters', '', function() {return{};}, this.scriptifyFilters.bind(this));
+        this.rtabs.t2 = rtabs.addTab('Filters', 'filters_container', '', function() {return{};}, this.scriptifyFilters.bind(this));
 
         this.rtabs.loadingdiv = $('rloading');
 
