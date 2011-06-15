@@ -1,0 +1,148 @@
+[21:38:36.006091] EXECUTE: 'INSERT INTO company (id) VALUES (DEFAULT) RETURNING company.id', ()
+[21:38:36.007507] DONE
+[21:38:36.007890] EXECUTE: 'INSERT INTO company (id) VALUES (DEFAULT) RETURNING company.id', ()
+[21:38:36.008136] DONE
+[21:38:36.008401] EXECUTE: 'INSERT INTO divisions (company_id) VALUES (%s) RETURNING divisions.id', (461,)
+[21:38:36.008838] DONE
+[21:38:36.009082] EXECUTE: 'INSERT INTO divisions (id) VALUES (DEFAULT) RETURNING divisions.id', ()
+[21:38:36.009328] DONE
+[21:38:36.009568] EXECUTE: 'INSERT INTO regions (id) VALUES (DEFAULT) RETURNING regions.id', ()
+[21:38:36.010967] DONE
+[21:38:36.011532] EXECUTE: 'INSERT INTO regions (id) VALUES (DEFAULT) RETURNING regions.id', ()
+[21:38:36.011819] DONE
+[21:38:36.013041] EXECUTE: 'INSERT INTO transactions (id) VALUES (DEFAULT) RETURNING transactions.id', ()
+[21:38:36.013683] DONE
+[21:38:36.013982] EXECUTE: 'INSERT INTO new_lease (id) VALUES (DEFAULT) RETURNING new_lease.id', ()
+[21:38:36.014446] DONE
+[21:38:36.025614] EXECUTE: 'SELECT 1 FROM transactions WHERE transactions.id = %s', (476,)
+[21:38:36.026477] DONE
+[21:38:36.026714] EXECUTE: 'SELECT 1 FROM new_lease WHERE new_lease.id = %s', (41,)
+[21:38:36.027127] DONE
+[21:38:36.027613] EXECUTE: 'UPDATE transactions SET company_id=%s, trans_manager=%s, trans_type=%s WHERE transactions.id = %s', (461, 3, u'New Lease', 476)
+[21:38:36.028196] DONE
+[21:38:36.028536] EXECUTE: 'UPDATE new_lease SET old_sqft=%s, trans_id=%s WHERE new_lease.id = %s', (100, 476, 41)
+[21:38:36.028921] DONE
+[21:38:36.029280] EXECUTE: 'INSERT INTO transactions (id) VALUES (DEFAULT) RETURNING transactions.id', ()
+[21:38:36.029577] DONE
+[21:38:36.029876] EXECUTE: 'INSERT INTO new_lease (id) VALUES (DEFAULT) RETURNING new_lease.id', ()
+[21:38:36.030131] DONE
+[21:38:36.033865] EXECUTE: 'SELECT 1 FROM transactions WHERE transactions.id = %s', (477,)
+[21:38:36.034310] DONE
+[21:38:36.034529] EXECUTE: 'SELECT 1 FROM new_lease WHERE new_lease.id = %s', (42,)
+[21:38:36.034791] DONE
+[21:38:36.035239] EXECUTE: 'UPDATE transactions SET company_id=%s, trans_manager=%s, trans_type=%s WHERE transactions.id = %s', (461, 1, u'New Lease', 477)
+[21:38:36.035587] DONE
+[21:38:36.035900] EXECUTE: 'UPDATE new_lease SET old_sqft=%s, trans_id=%s WHERE new_lease.id = %s', (200, 477, 42)
+[21:38:36.036203] DONE
+[21:38:36.036545] EXECUTE: 'INSERT INTO transactions (id) VALUES (DEFAULT) RETURNING transactions.id', ()
+[21:38:36.036811] DONE
+[21:38:36.037100] EXECUTE: 'INSERT INTO lease_extension (id) VALUES (DEFAULT) RETURNING lease_extension.id', ()
+[21:38:36.037593] DONE
+[21:38:36.042208] EXECUTE: 'SELECT 1 FROM transactions WHERE transactions.id = %s', (478,)
+[21:38:36.042641] DONE
+[21:38:36.043178] EXECUTE: 'SELECT 1 FROM lease_extension WHERE lease_extension.id = %s', (6,)
+[21:38:36.043536] DONE
+[21:38:36.043899] EXECUTE: 'UPDATE transactions SET company_id=%s, trans_manager=%s, trans_type=%s WHERE transactions.id = %s', (461, 1, u'Lease Extension', 478)
+[21:38:36.044254] DONE
+[21:38:36.044571] EXECUTE: 'UPDATE lease_extension SET market_survey_date=%s, old_sqft=%s, trans_id=%s WHERE lease_extension.id = %s', (datetime.date(2011, 5, 15), 100, 478, 6)
+[21:38:36.044949] DONE
+[21:38:36.066487] EXECUTE: 'SELECT transactions.area_id, transactions.client_id, transactions.client_trans_manager, transactions.company_id, transactions.division_id, transactions.engage_date, transactions.id, transactions.property_id, transactions.rebc_entry_date, transactions.region_id, transactions.survey_id, transactions.trans_manager, transactions.trans_type FROM transactions WHERE transactions.company_id IN (%s) AND transactions.trans_type IN (%s, %s, %s)', (461, u'New Lease', u'Lease Extension', u'Purchase')
+[21:38:36.068580] DONE
+[21:38:36.069786] EXECUTE: 'SELECT COUNT(*) FROM transactions LEFT JOIN new_lease ON new_lease.trans_id = transactions.id WHERE new_lease.old_sqft = %s AND transactions.id IN (%s, %s, %s)', (100, 476, 477, 478)
+[21:38:36.072969] DONE
+[21:38:36.114556] EXECUTE: 'SELECT transactions.area_id, transactions.client_id, transactions.client_trans_manager, transactions.company_id, transactions.division_id, transactions.engage_date, transactions.id, transactions.property_id, transactions.rebc_entry_date, transactions.region_id, transactions.survey_id, transactions.trans_manager, transactions.trans_type FROM transactions WHERE transactions.company_id IN (%s) AND transactions.trans_type IN (%s, %s, %s)', (461, u'New Lease', u'Lease Extension', u'Purchase')
+[21:38:36.118890] DONE
+[21:38:36.120013] EXECUTE: 'SELECT COUNT(*) FROM transactions LEFT JOIN new_lease ON new_lease.trans_id = transactions.id WHERE (new_lease.old_sqft > %s OR new_lease.old_sqft > %s) AND transactions.id IN (%s, %s, %s)', (500, 101, 476, 477, 478)
+[21:38:36.123868] DONE
+[21:38:36.124107] EXECUTE: 'SELECT 1 FROM new_lease WHERE new_lease.id = %s', (42,)
+[21:38:36.124603] DONE
+[21:38:36.124841] EXECUTE: 'UPDATE new_lease SET market_survey_date=%s WHERE new_lease.id = %s', (datetime.date(2011, 5, 15), 42)
+[21:38:36.126090] DONE
+[21:38:36.169198] EXECUTE: 'SELECT transactions.area_id, transactions.client_id, transactions.client_trans_manager, transactions.company_id, transactions.division_id, transactions.engage_date, transactions.id, transactions.property_id, transactions.rebc_entry_date, transactions.region_id, transactions.survey_id, transactions.trans_manager, transactions.trans_type FROM transactions WHERE transactions.company_id IN (%s) AND transactions.trans_type IN (%s, %s, %s)', (461, u'New Lease', u'Lease Extension', u'Purchase')
+[21:38:36.174890] DONE
+[21:38:36.176131] EXECUTE: 'SELECT COUNT(*) FROM transactions LEFT JOIN new_lease ON new_lease.trans_id = transactions.id WHERE transactions.trans_type = %s AND transactions.trans_manager = %s AND new_lease.market_survey_date = %s AND new_lease.old_sqft < %s AND transactions.id IN (%s, %s, %s)', (u'New Lease', 1, datetime.date(2011, 5, 15), 300, 476, 477, 478)
+[21:38:36.179875] DONE
+[21:38:36.221653] EXECUTE: 'SELECT transactions.area_id, transactions.client_id, transactions.client_trans_manager, transactions.company_id, transactions.division_id, transactions.engage_date, transactions.id, transactions.property_id, transactions.rebc_entry_date, transactions.region_id, transactions.survey_id, transactions.trans_manager, transactions.trans_type FROM transactions WHERE transactions.company_id IN (%s) AND transactions.trans_type IN (%s, %s, %s)', (461, u'New Lease', u'Lease Extension', u'Purchase')
+[21:38:36.227949] DONE
+[21:38:36.240456] EXECUTE: 'SELECT COUNT(*) FROM transactions LEFT JOIN new_lease ON new_lease.trans_id = transactions.id LEFT JOIN lease_extension ON lease_extension.trans_id = transactions.id WHERE (transactions.trans_type = %s OR transactions.trans_type = %s) AND transactions.trans_manager = %s AND (new_lease.market_survey_date = %s OR lease_extension.market_survey_date = %s) AND new_lease.old_sqft < %s AND lease_extension.old_sqft < %s AND transactions.id IN (%s, %s, %s)', (u'New Lease', u'Lease Extension', 1, datetime.date(2011, 5, 15), datetime.date(2011, 5, 15), 300, 300, 476, 477, 478)
+[21:38:36.249543] DONE
+[21:38:36.290414] EXECUTE: 'INSERT INTO company (id) VALUES (DEFAULT) RETURNING company.id', ()
+[21:38:36.294188] DONE
+[21:38:36.294816] EXECUTE: 'INSERT INTO company (id) VALUES (DEFAULT) RETURNING company.id', ()
+[21:38:36.296247] DONE
+[21:38:36.296651] EXECUTE: 'INSERT INTO divisions (company_id) VALUES (%s) RETURNING divisions.id', (463,)
+[21:38:36.297920] DONE
+[21:38:36.298447] EXECUTE: 'INSERT INTO divisions (id) VALUES (DEFAULT) RETURNING divisions.id', ()
+[21:38:36.299945] DONE
+[21:38:36.300323] EXECUTE: 'INSERT INTO regions (id) VALUES (DEFAULT) RETURNING regions.id', ()
+[21:38:36.302218] DONE
+[21:38:36.302583] EXECUTE: 'INSERT INTO regions (id) VALUES (DEFAULT) RETURNING regions.id', ()
+[21:38:36.304321] DONE
+[21:38:36.306214] EXECUTE: 'INSERT INTO transactions (company_id, division_id, trans_type) VALUES (%s, %s, %s) RETURNING transactions.id', (463, 464, u'New Lease')
+[21:38:36.309260] DONE
+[21:38:36.309686] EXECUTE: 'INSERT INTO transactions (company_id, division_id, trans_type) VALUES (%s, %s, %s) RETURNING transactions.id', (463, 23, u'New Lease')
+[21:38:36.310983] DONE
+[21:38:36.311436] EXECUTE: 'INSERT INTO transactions (company_id, division_id, region_id, trans_type) VALUES (%s, %s, %s, %s) RETURNING transactions.id', (463, 464, 464, u'New Lease')
+[21:38:36.313910] DONE
+[21:38:36.352792] EXECUTE: 'SELECT COUNT(*) FROM transactions WHERE transactions.company_id IN (%s) AND transactions.division_id IN (%s) AND transactions.trans_type IN (%s, %s, %s)', (463, 464, u'New Lease', u'Lease Extension', u'Purchase')
+[21:38:36.357200] DONE
+[21:38:36.396503] EXECUTE: 'SELECT COUNT(*) FROM transactions WHERE transactions.company_id IN (%s) AND transactions.trans_type IN (%s, %s, %s)', (463, u'New Lease', u'Lease Extension', u'Purchase')
+[21:38:36.404910] DONE
+[21:38:36.443306] EXECUTE: 'SELECT COUNT(*) FROM transactions WHERE transactions.company_id IN (%s) AND transactions.division_id IN (%s) AND transactions.region_id IN (%s) AND transactions.trans_type IN (%s, %s, %s)', (463, 464, 464, u'New Lease', u'Lease Extension', u'Purchase')
+[21:38:36.453830] DONE
+[21:38:36.499671] EXECUTE: 'INSERT INTO company (id) VALUES (DEFAULT) RETURNING company.id', ()
+[21:38:36.502895] DONE
+[21:38:36.503516] EXECUTE: 'INSERT INTO company (id) VALUES (DEFAULT) RETURNING company.id', ()
+[21:38:36.505890] DONE
+[21:38:36.506156] EXECUTE: 'INSERT INTO divisions (company_id) VALUES (%s) RETURNING divisions.id', (465,)
+[21:38:36.506671] DONE
+[21:38:36.506919] EXECUTE: 'INSERT INTO divisions (id) VALUES (DEFAULT) RETURNING divisions.id', ()
+[21:38:36.507700] DONE
+[21:38:36.508292] EXECUTE: 'INSERT INTO regions (id) VALUES (DEFAULT) RETURNING regions.id', ()
+[21:38:36.509905] DONE
+[21:38:36.510289] EXECUTE: 'INSERT INTO regions (id) VALUES (DEFAULT) RETURNING regions.id', ()
+[21:38:36.511486] DONE
+[21:38:36.513564] EXECUTE: 'INSERT INTO transactions (company_id, trans_manager, trans_type) VALUES (%s, %s, %s) RETURNING transactions.id', (465, 3, u'New Lease')
+[21:38:36.515941] DONE
+[21:38:36.516390] EXECUTE: 'INSERT INTO transactions (company_id, trans_manager, trans_type) VALUES (%s, %s, %s) RETURNING transactions.id', (465, 1, u'New Lease')
+[21:38:36.518523] DONE
+[21:38:36.518973] EXECUTE: 'INSERT INTO transactions (company_id) VALUES (%s) RETURNING transactions.id', (465,)
+[21:38:36.519300] DONE
+[21:38:36.561857] EXECUTE: 'SELECT transactions.area_id, transactions.client_id, transactions.client_trans_manager, transactions.company_id, transactions.division_id, transactions.engage_date, transactions.id, transactions.property_id, transactions.rebc_entry_date, transactions.region_id, transactions.survey_id, transactions.trans_manager, transactions.trans_type FROM transactions WHERE transactions.company_id IN (%s) AND transactions.trans_type IN (%s, %s, %s)', (465, u'New Lease', u'Lease Extension', u'Purchase')
+[21:38:36.566952] DONE
+[21:38:36.567993] EXECUTE: 'SELECT COUNT(*) FROM transactions WHERE transactions.trans_type = %s AND transactions.id IN (%s, %s)', (u'New Lease', 482, 483)
+[21:38:36.570455] DONE
+[21:38:36.610404] EXECUTE: 'SELECT transactions.area_id, transactions.client_id, transactions.client_trans_manager, transactions.company_id, transactions.division_id, transactions.engage_date, transactions.id, transactions.property_id, transactions.rebc_entry_date, transactions.region_id, transactions.survey_id, transactions.trans_manager, transactions.trans_type FROM transactions WHERE transactions.company_id IN (%s) AND transactions.trans_type IN (%s, %s, %s)', (465, u'New Lease', u'Lease Extension', u'Purchase')
+[21:38:36.615948] DONE
+[21:38:36.618778] EXECUTE: 'SELECT COUNT(*) FROM transactions WHERE transactions.trans_type = %s AND transactions.trans_manager = %s AND transactions.id IN (%s, %s)', (u'New Lease', 1, 482, 483)
+[21:38:36.624885] DONE
+[21:38:36.666255] EXECUTE: 'SELECT transactions.area_id, transactions.client_id, transactions.client_trans_manager, transactions.company_id, transactions.division_id, transactions.engage_date, transactions.id, transactions.property_id, transactions.rebc_entry_date, transactions.region_id, transactions.survey_id, transactions.trans_manager, transactions.trans_type FROM transactions WHERE transactions.company_id IN (%s) AND transactions.trans_type IN (%s, %s, %s)', (465, u'New Lease', u'Lease Extension', u'Purchase')
+[21:38:36.668317] DONE
+[21:38:36.669189] EXECUTE: 'SELECT COUNT(*) FROM transactions WHERE transactions.trans_type = %s AND transactions.trans_manager = %s AND transactions.engage_date = %s AND transactions.id IN (%s, %s)', (u'New Lease', 1, datetime.date(2011, 5, 15), 482, 483)
+[21:38:36.670635] DONE
+[21:38:36.670874] EXECUTE: 'SELECT 1 FROM transactions WHERE transactions.id = %s', (483,)
+[21:38:36.672910] DONE
+[21:38:36.673159] EXECUTE: 'UPDATE transactions SET engage_date=%s WHERE transactions.id = %s', (datetime.date(2011, 5, 15), 483)
+[21:38:36.674256] DONE
+[21:38:36.717408] EXECUTE: 'SELECT transactions.area_id, transactions.client_id, transactions.client_trans_manager, transactions.company_id, transactions.division_id, transactions.engage_date, transactions.id, transactions.property_id, transactions.rebc_entry_date, transactions.region_id, transactions.survey_id, transactions.trans_manager, transactions.trans_type FROM transactions WHERE transactions.company_id IN (%s) AND transactions.trans_type IN (%s, %s, %s)', (465, u'New Lease', u'Lease Extension', u'Purchase')
+[21:38:36.722668] DONE
+[21:38:36.723556] EXECUTE: 'SELECT COUNT(*) FROM transactions WHERE transactions.trans_type = %s AND transactions.trans_manager = %s AND transactions.engage_date = %s AND transactions.id IN (%s, %s)', (u'New Lease', 1, datetime.date(2011, 5, 15), 482, 483)
+[21:38:36.725884] DONE
+[21:38:36.771935] EXECUTE: 'SELECT transactions.area_id, transactions.client_id, transactions.client_trans_manager, transactions.company_id, transactions.division_id, transactions.engage_date, transactions.id, transactions.property_id, transactions.rebc_entry_date, transactions.region_id, transactions.survey_id, transactions.trans_manager, transactions.trans_type FROM transactions WHERE transactions.company_id IN (%s) AND transactions.trans_type IN (%s, %s, %s)', (465, u'New Lease', u'Lease Extension', u'Purchase')
+[21:38:36.777998] DONE
+[21:38:36.779117] EXECUTE: 'SELECT COUNT(*) FROM transactions WHERE transactions.engage_date < %s AND transactions.id IN (%s, %s)', (datetime.date(2011, 5, 20), 482, 483)
+[21:38:36.782943] DONE
+[21:38:36.783643] EXECUTE: 'SELECT transactions.area_id, transactions.client_id, transactions.client_trans_manager, transactions.company_id, transactions.division_id, transactions.engage_date, transactions.id, transactions.property_id, transactions.rebc_entry_date, transactions.region_id, transactions.survey_id, transactions.trans_manager, transactions.trans_type FROM transactions WHERE transactions.engage_date < %s AND transactions.id IN (%s, %s)', (datetime.date(2011, 5, 20), 482, 483)
+[21:38:36.785460] DONE
+[21:38:36.827016] EXECUTE: 'INSERT INTO company (id) VALUES (DEFAULT) RETURNING company.id', ()
+[21:38:36.830934] DONE
+[21:38:36.831432] EXECUTE: 'INSERT INTO company (id) VALUES (DEFAULT) RETURNING company.id', ()
+[21:38:36.832913] DONE
+[21:38:36.833366] EXECUTE: 'INSERT INTO divisions (company_id) VALUES (%s) RETURNING divisions.id', (467,)
+[21:38:36.834887] DONE
+[21:38:36.835153] EXECUTE: 'INSERT INTO divisions (id) VALUES (DEFAULT) RETURNING divisions.id', ()
+[21:38:36.836021] DONE
+[21:38:36.836266] EXECUTE: 'INSERT INTO regions (id) VALUES (DEFAULT) RETURNING regions.id', ()
+[21:38:36.837906] DONE
+[21:38:36.838269] EXECUTE: 'INSERT INTO regions (id) VALUES (DEFAULT) RETURNING regions.id', ()
+[21:38:36.838882] DONE

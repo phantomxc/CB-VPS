@@ -42,9 +42,9 @@ def datify(obj, name, value):
     
     if value is not None:
         try:
-            from datetime import date
+            from datetime import date as mydate
             m, d, y = map(int, value.split('-'))
-            return date(y, m, d)
+            return mydate(y, m, d)
         except:
             pass
 

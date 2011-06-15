@@ -4,15 +4,15 @@ from storm.locals import *
 from webpy.dark import *
 
 from model.company import *
-from model.transaction import *
+from model.trans2 import *
 from model.users import *
 from model.report import Report
 
-from datetime import date
+import datetime
 
 import sys
 from storm.tracer import debug
-debug(False, stream=sys.stdout)
+debug(True, stream=sys.stdout)
 
 class TestReport(TestCase):
 
@@ -41,7 +41,7 @@ class TestReport(TestCase):
         self.store.commit()
 
     def tearDown(self):
-       
+        return;
         for x in self.objs:
             self.store.remove(x) 
         self.store.commit()
@@ -64,30 +64,33 @@ class TestReport(TestCase):
         t1 = self.fstore(Transaction())
         t1.company_id = self.comp1.id
         t1.division_id = self.div1.id
+        t1.trans_type = u'New Lease'
 
         t2 = self.fstore(Transaction())
         t2.company_id = self.comp1.id
         t2.division_id = 23
+        t2.trans_type = u'New Lease'
 
     
         t3 = self.fstore(Transaction())
         t3.company_id = self.comp1.id
         t3.division_id = self.div1.id
         t3.region_id = self.reg1.id
+        t3.trans_type = u'New Lease'
 
         self.store.commit()
 
         r = Report(companies=[self.comp1.id], divisions=[self.div1.id])
         r.buildReport()
-        self.assertEqual(r.transactions.count(), 2)
+        self.assertEqual(r.trans.count(), 2)
 
         r = Report(companies=[self.comp1.id])
         r.buildReport()
-        self.assertEqual(r.transactions.count(), 3)
+        self.assertEqual(r.trans.count(), 3)
 
         r = Report(companies=[self.comp1.id], divisions=[self.div1.id], regions=[self.reg1.id])
         r.buildReport()
-        self.assertEqual(r.transactions.count(), 1)
+        self.assertEqual(r.trans.count(), 1)
 
     def test_build_report_transactions_expressions(self):
         """
@@ -112,7 +115,8 @@ class TestReport(TestCase):
         
         # ONE FILTER == CONSTRAINT
         filters = {
-            'fields':['trans_type'], 
+            'objects':['Transaction'],
+            'fields':['ttpe'], 
             'constraints':['=='], 
             'args':['New Lease'],
             'operators':['none']}
@@ -122,14 +126,13 @@ class TestReport(TestCase):
         r.buildReport()
         
         self.assertEqual(r.transactions.count(), 2)
-
         # TWO FILTERS
         filters = {
-            'fields':['trans_type', 'trans_manager'], 
+            'objects':['Transaction', 'Transaction'],
+            'fields':['ttpe', 'tman'], 
             'constraints':['==', '=='], 
             'args':['New Lease', '1'],
             'operators':['none','and']}
-
 
         r = Report(companies=[self.comp1.id], filters=filters)
         r.buildReport()
@@ -138,39 +141,40 @@ class TestReport(TestCase):
         
         # THREE FILTERS NO RESULTS
         filters = {
-            'fields':['trans_type', 'trans_manager', 'trans_date'], 
+            'objects':['Transaction', 'Transaction', 'Transaction'],
+            'fields':['ttpe', 'tman', 'eda'], 
             'constraints':['==', '==', '=='], 
-            'args':['New Lease', '1', '2011-05-15'],
+            'args':['New Lease', '1', '05-15-2011'],
             'operators':['none','and', 'and']}
-
 
         r = Report(companies=[self.comp1.id], filters=filters)
         r.buildReport()
 
         self.assertEqual(r.transactions.count(), 0)
         
+        
         # THREE FILTERS
         filters = {
-            'fields':['trans_type', 'trans_manager', 'trans_date'], 
+            'objects':['Transaction', 'Transaction', 'Transaction'],
+            'fields':['ttpe', 'tman', 'eda'], 
             'constraints':['==', '==', '=='], 
-            'args':['New Lease', '1', '2011-05-15'],
+            'args':['New Lease', '1', '05-15-2011'],
             'operators':['none','and', 'and']}
-
-        timevar = '2011-05-15'
-        year, month, day = map(int, timevar.split('-'))
-        t2.trans_date = date(year, month, day)
+        
+        t2.engage_date = '05-15-2011'
         self.store.commit()
 
         r = Report(companies=[self.comp1.id], filters=filters)
         r.buildReport()
-
         self.assertEqual(r.transactions.count(), 1)
+
         
         # SINGLE FILTER < CONSTRAINT
         filters = {
-            'fields':['trans_date'], 
+            'objects':['Transaction'],
+            'fields':['eda'], 
             'constraints':['<'], 
-            'args':['2011-05-20'],
+            'args':['05-20-2011'],
             'operators':['none']}
         
         r = Report(companies=[self.comp1.id], filters=filters)
@@ -184,32 +188,41 @@ class TestReport(TestCase):
         I test that we can build some basic expressions on the acq obj
         """
         t1 = self.fstore(Transaction())  
-        a1 = self.fstore(Acquisition())
+        nl1 = self.fstore(NewLease())
         self.store.commit()
         t1.company_id = self.comp1.id
         t1.trans_type = 'New Lease'
         t1.trans_manager = 3
-        a1.old_sqft = 100
-        a1.trans_id = t1.id
+        nl1.old_sqft = 100
+        nl1.trans_id = t1.id
         
         t2 = self.fstore(Transaction())
-        a2 = self.fstore(Acquisition())
+        nl2 = self.fstore(NewLease())
         self.store.commit()
         t2.company_id = self.comp1.id
         t2.trans_type = 'New Lease'
         t2.trans_manager = 1
-        a2.old_sqft = 200
-        a2.trans_id = t2.id
+        nl2.old_sqft = 200
+        nl2.trans_id = t2.id
 
-    
         t3 = self.fstore(Transaction())
+        le1 = self.fstore(LeaseExtension())
+        self.store.commit()
         t3.company_id = self.comp1.id
+        t3.trans_type = 'Lease Extension'
+        t3.trans_manager = 1
+
+        le1.market_survey_date = '05-15-2011'
+        le1.old_sqft = 100
+        le1.trans_id = t3.id
+        
 
         self.store.commit()
         
         # ONE FILTER == CONSTRAINT
         filters = {
-            'fields':['old_sqft'], 
+            'objects':['New Lease'],
+            'fields':['nl2'], 
             'constraints':['=='], 
             'args':['100'],
             'operators':['none']}
@@ -217,13 +230,13 @@ class TestReport(TestCase):
 
         r = Report(companies=[self.comp1.id], filters=filters, trans_obj='acquisition')
         r.buildReport()
-        print [x.old for x in r.transactions] 
         self.assertEqual(r.transactions.count(), 1)
 
         # TWO FILTERS
         filters = {
-            'fields':['old_sqft', 'old_sqft'], 
-            'constraints':['<', '>'], 
+            'objects':['New Lease', 'New Lease'],
+            'fields':['nl2', 'nl2'], 
+            'constraints':['>', '>'], 
             'args':['500', '101'],
             'operators':['none','or']}
 
@@ -233,29 +246,16 @@ class TestReport(TestCase):
 
         self.assertEqual(r.transactions.count(), 1)
         
-        # THREE FILTERS NO RESULTS
-        filters = {
-            'fields':['trans_type', 'trans_manager', 'trans_date'], 
-            'constraints':['==', '==', '=='], 
-            'args':['New Lease', '1', '2011-05-15'],
-            'operators':['none','and', 'and']}
-
-
-        r = Report(companies=[self.comp1.id], filters=filters)
-        r.buildReport()
-
-        self.assertEqual(r.transactions.count(), 0)
         
-        # THREE FILTERS
+        # FOUR FILTERS TWO OBJECTS
         filters = {
-            'fields':['trans_type', 'trans_manager', 'trans_date', 'old_sqft'], 
+            'objects':['Transaction', 'Transaction', 'New Lease', 'New Lease'],
+            'fields':['ttpe', 'tman', 'nl6', 'nl2'], 
             'constraints':['==', '==', '==', '<'], 
-            'args':['New Lease', '1', '2011-05-15', '300'],
+            'args':['New Lease', '1', '05-15-2011', '300'],
             'operators':['none','and', 'and', 'and']}
 
-        timevar = '2011-05-15'
-        year, month, day = map(int, timevar.split('-'))
-        a2.trans_date = date(year, month, day)
+        nl2.market_survey_date = '05-15-2011'
         self.store.commit()
 
         r = Report(companies=[self.comp1.id], filters=filters, trans_obj='acquisition')
@@ -263,5 +263,20 @@ class TestReport(TestCase):
 
         self.assertEqual(r.transactions.count(), 1)
         
+        # FOUR FILTERS TWO OBJECTS
+        filters = {
+            'objects':[
+                'Transaction', 'Transaction', 'Transaction', 
+                'New Lease', 'Lease Extension', 'New Lease',
+                'Lease Extension'],
+            'fields':['ttpe', 'ttpe', 'tman', 'nl6', 'le6', 'nl2', 'le2'], 
+            'constraints':['==', '==', '==', '==', '==', '<', '<'], 
+            'args':['New Lease', 'Lease Extension', '1', '05-15-2011', '05-15-2011', '300', '300'],
+            'operators':['none','or', 'and', 'and', 'or', 'and', 'or']}
+
+        r = Report(companies=[self.comp1.id], filters=filters, trans_obj='acquisition')
+        r.buildReport()
+
+        self.assertEqual(r.transactions.count(), 2)
 if __name__ == '__main__':
     unittest.main() 

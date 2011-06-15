@@ -17,7 +17,7 @@ Dashboard.prototype = {
         var rtabs = new Tabs('right_tabs');
         this.rtabs = rtabs;
         this.rtabs.t1 = rtabs.addTab('Companies', 'companies', 'companies', function(){ return{};}, this.scriptifyCompanies.bind(this));
-        this.rtabs.t2 = rtabs.addTab('Filters', 'filters', 'filters', this.buildGlobals.bind(this), this.scriptifyFilters.bind(this));
+        this.rtabs.t2 = rtabs.addTab('Filters', 'acq_filters', '', function() {return{};}, this.scriptifyFilters.bind(this));
 
         this.rtabs.loadingdiv = $('rloading');
 
@@ -39,6 +39,8 @@ Dashboard.prototype = {
         // START THE TABS
         this.rtabs.start(this.rtabs.t1);
         this.ltabs.start(this.ltabs.t1);
+
+        $('disp_filters').hide();
     },
 
     buildGlobals: function() {
@@ -124,13 +126,33 @@ Dashboard.prototype = {
     },
 
     scriptifyFilters: function(li) {
-        return;
+        // Determine Filter view
+        if (this.ltabs.chosen == this.ltabs.t1) {
+            $('acq_filters').show();
+            $('disp_filters').hide();
+        } 
+        else if (this.ltabs.chosen == this.ltabs.t2) {
+            $('acq_filters').hide();
+            $('disp_filters').show();
+        }
     }
 
 }
 
 document.observe("dom:loaded", function(ev) {
+
+    var fields = [ {'name':'Old SQFT', 'imap':'old', 'type':'int'}, {'name':'Market Survey', 'imap':'mksvy','type':'bool'}]
+    var types = [ {'name':'int', 'constraints':[{'name':'is LESS than','args':1}, {'name':'is GREATER than', 'args':1}]},{'name':'bool', 'constraints':[ {'name':'True', 'args:':0}, {'name':'False', 'args':0}]}];
     var page = new Dashboard();
+    var acq_filters = new Filters('acq_filter_table');
+    acq_filters.addTypes(types);
+    acq_filters.addFields(fields);
+    acq_filters.start();
+
+    var disp_filters = new Filters('disp_filter_table');
+    disp_filters.addTypes(types);
+    disp_filters.addFields(fields);
+    disp_filters.start();
 });
 
 

@@ -1,4 +1,4 @@
-[[ set jsfiles = ['/static/js/dashboard.js', '/static/js/tabs.js'] + jsfiles|d([]) ]]
+[[ set jsfiles = ['/static/js/dashboard.js', '/static/js/tabs.js', '/static/js/filters.js'] + jsfiles|d([]) ]]
 [[ set cssfiles = ['/static/css/dashboard.css'] + cssfiles|d([]) ]]
 [[ set prototype = True ]]
 [[ extends 'base.html' ]]
@@ -13,6 +13,7 @@
                         <div id="left_tabs" class="tab_container">
                         </div>
                         <div id="lloading" class="tab_content">
+                            Loading...
                         </div>
                         <div id="acq" class="tab_content">
                             <table class="report_table">
@@ -55,10 +56,19 @@
                         </div>
                         <form id="dashboard_form" action="report" method="post">
                             <div id="rloading" class="tab_content">
+                                Loading...
                             </div>
                             <div id="companies" class="tab_content">
                             </div>
-                            <div id="filters" class="tab_content">
+                            <div id="acq_filters" class="tab_content">
+                                ACQ FILTERS
+                                <table id="acq_filter_table" style="width:100%;">
+                                </table>
+                            </div>
+                            <div id="disp_filters" class="tab_content">
+                                DISP FILTERS
+                                <table id="disp_filter_table" style="width:100%;">
+                                </table>
                             </div>
                         </form>
                     </div>

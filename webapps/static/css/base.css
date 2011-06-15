@@ -121,6 +121,7 @@ div.base_tabs ul li.active {
     -webkit-border-radius: 5px 5px 0px 0px;
     -khtml-border-radius: 5px 5px 0px 0px;
     border-radius: 5px 5px 0px 0px;
+    height:23px;
 }
 
 div.base_tabs div.tab_content {
