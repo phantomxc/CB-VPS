@@ -125,7 +125,7 @@ class TestReport(TestCase):
         r = Report(companies=[self.comp1.id], filters=filters)
         r.buildReport()
         
-        self.assertEqual(r.transactions.count(), 2)
+        self.assertEqual(r.trans.count(), 2)
         # TWO FILTERS
         filters = {
             'objects':['Transaction', 'Transaction'],
@@ -137,7 +137,7 @@ class TestReport(TestCase):
         r = Report(companies=[self.comp1.id], filters=filters)
         r.buildReport()
 
-        self.assertEqual(r.transactions.count(), 1)
+        self.assertEqual(r.trans.count(), 1)
         
         # THREE FILTERS NO RESULTS
         filters = {
@@ -150,7 +150,7 @@ class TestReport(TestCase):
         r = Report(companies=[self.comp1.id], filters=filters)
         r.buildReport()
 
-        self.assertEqual(r.transactions.count(), 0)
+        self.assertEqual(r.trans.count(), 0)
         
         
         # THREE FILTERS
@@ -166,7 +166,7 @@ class TestReport(TestCase):
 
         r = Report(companies=[self.comp1.id], filters=filters)
         r.buildReport()
-        self.assertEqual(r.transactions.count(), 1)
+        self.assertEqual(r.trans.count(), 1)
 
         
         # SINGLE FILTER < CONSTRAINT
@@ -180,8 +180,8 @@ class TestReport(TestCase):
         r = Report(companies=[self.comp1.id], filters=filters)
         r.buildReport()
         
-        self.assertEqual(r.transactions.count(), 1)
-        self.assertEqual(r.transactions.one().trans_manager, 1)
+        self.assertEqual(r.trans.count(), 1)
+        self.assertEqual(r.trans.one().trans_manager, 1)
 
     def test_build_report_acq_expressions(self):
         """
@@ -230,7 +230,7 @@ class TestReport(TestCase):
 
         r = Report(companies=[self.comp1.id], filters=filters, trans_obj='acquisition')
         r.buildReport()
-        self.assertEqual(r.transactions.count(), 1)
+        self.assertEqual(r.trans.count(), 1)
 
         # TWO FILTERS
         filters = {
@@ -244,7 +244,7 @@ class TestReport(TestCase):
         r = Report(companies=[self.comp1.id], filters=filters, trans_obj='acquisition')
         r.buildReport()
 
-        self.assertEqual(r.transactions.count(), 1)
+        self.assertEqual(r.trans.count(), 1)
         
         
         # FOUR FILTERS TWO OBJECTS
@@ -261,7 +261,7 @@ class TestReport(TestCase):
         r = Report(companies=[self.comp1.id], filters=filters, trans_obj='acquisition')
         r.buildReport()
 
-        self.assertEqual(r.transactions.count(), 1)
+        self.assertEqual(r.trans.count(), 1)
         
         # FOUR FILTERS TWO OBJECTS
         filters = {
@@ -277,6 +277,6 @@ class TestReport(TestCase):
         r = Report(companies=[self.comp1.id], filters=filters, trans_obj='acquisition')
         r.buildReport()
 
-        self.assertEqual(r.transactions.count(), 2)
+        self.assertEqual(r.trans.count(), 2)
 if __name__ == '__main__':
     unittest.main() 

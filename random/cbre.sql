@@ -187,3 +187,24 @@ create table clientproperties (
     zipcode text,
     sqft integer
 )
+
+
+
+
+create table zoomerang (
+    id serial,
+    email text,
+    sent_date date,
+    submit_date date,
+    avg_score integer,
+    client_id integer,
+    employee_id integer
+);
+
+
+create table zoomqa (
+    id serial,
+    question text,
+    answer text,
+    z_id integer
+);

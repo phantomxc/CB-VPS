@@ -65,7 +65,12 @@ class buildReport:
 
         report = Report(companies=i.comp_cbox, divisions=i.div_cbox, regions=i.reg_cbox, areas=i.area_cbox, trans_obj=i.trans_obj)
         report.buildReport()
-        return jrender('/dashboard/report.html', {'report':report})
+
+        if i.trans_obj == 'acquisition':
+            return jrender('/dashboard/acq_report.html', {'report':report})
+        else:
+            return jrender('/dashboard/disp_report.html', {'report':report})
+
         
 
 

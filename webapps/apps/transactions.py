@@ -5,6 +5,11 @@ from model.users import *
 from model.company import *
 from model.client_prop import ClientProperty
 from model.trans2 import *
+from model.zoom import *
+
+import sys
+sys.stdout = sys.stderr
+
 
 urls = (
     '', 'trans',
@@ -15,6 +20,8 @@ urls = (
 )
 
 class trans:
+
+
     def GET(self):
         store = get_store()
         clients = store.find(Client)
@@ -24,15 +31,19 @@ class trans:
             'employees':employees
         })
 
+
+
 class addTrans:
     '''
     Add a transaction
     '''
 
+
     def POST(self):
         i = web.input(survey={})
         store = get_store() 
-        
+
+
         for k, v in i.items():
             if v == '' or v == None:
                 del i[k]
@@ -67,15 +78,27 @@ class addTrans:
         
         sub.create(**i)
 
-
+        #SURVEY
+        if i['survey'].filename != '':
+            sent_date = i.get('survey_sent', '')
+            zoom = Zoom(store, i['survey'])
+            zoom.client_id = i['cid']
+            if sent_date:
+                zoom.sent_date = sent_date
+            
+            store.flush()
+            t.survey_id = zoom.id
 
         store.commit()
+
 
 
 class request:
     '''
     Return information for the ajax forms. 
     '''
+
+
     def POST(self, rtype):
         store = get_store()
         i = web.input()
@@ -104,12 +127,15 @@ class request:
             res = []
             res.append({'id':1, 'title':'Fake Area'})
             return return_json(res)
-            
+    
+
 
 class propertySearch:
     '''
     Used with the ajax auto complete
     '''
+
+
     def GET(self):
         i = web.input()
         store = get_store()
@@ -126,6 +152,7 @@ class propertySearch:
             res['data'].append(prop.id)
 
         return return_json(res)
+
 
 
 class transactionDetails:
@@ -147,6 +174,9 @@ class transactionDetails:
         path = '/transaction/'
 
         return jrender(path + type_dict[trans_type])
+
+
+
 def session_auth():
     '''
     This entire app requires the user to be logged in

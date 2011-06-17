@@ -29,7 +29,37 @@ class Transaction(Storm):
     #References
     prop = Reference(property_id, 'ClientProperty.id')
     survey = Reference(survey_id, 'Zoom.id')
+        
+        #Acquisitions
+    newlease = Reference(id, 'NewLease.trans_id')
+    leaseext = Reference(id, 'LeaseExtension.trans_id')
+    purchase = Reference(id, 'Purchase.trans_id')
 
+        #Dispositions
+    sublease = Reference(id, 'SubLease.trans_id')
+    leasetermination = Reference(id, 'LeaseTermination.trans_id')
+    sale = Reference(id, 'Sale.trans_id')
+
+    @property    
+    def tchild(self):
+        """
+        I create an easy link to the transactions child
+        """
+        if self.trans_type == 'New Lease':
+            return self.newlease
+        elif self.trans_type == 'Lease Extension':
+            return self.leaseext
+        elif self.trans_type == 'Purchase':
+            return self.purchase
+        elif self.trans_type == 'Sublease':
+            return self.sublease
+        elif self.trans_type == 'Lease Termination':
+            return self.leasetermination
+        elif self.trans_type == 'Sale':
+            return self.sale
+        else:
+            return None
+    
     imap = {
         'cid':'client_id', 'coid':'company_id',
         'did':'division_id', 'rid':'region_id',
@@ -59,7 +89,7 @@ class Transaction(Storm):
 
 
 
-class NewLease(Transaction):
+class NewLease(Storm):
     """
     I am a type of transaction
     """
@@ -102,7 +132,7 @@ class NewLease(Transaction):
         'nl10':'notes'
     }
 
-class LeaseExtension(Transaction):
+class LeaseExtension(Storm):
     """
     I am a type of transaction
     """
@@ -146,7 +176,7 @@ class LeaseExtension(Transaction):
     }
 
 
-class Purchase(Transaction):
+class Purchase(Storm):
     """
     I am a type of transaction
     """
@@ -188,7 +218,7 @@ class Purchase(Transaction):
     }
 
 
-class SubLease(Transaction):
+class SubLease(Storm):
     """
     I am a type of transaction
     """
@@ -232,7 +262,7 @@ class SubLease(Transaction):
     }
 
 
-class LeaseTermination(Transaction):
+class LeaseTermination(Storm):
     """
     I am a type of transaction
     """
@@ -276,7 +306,7 @@ class LeaseTermination(Transaction):
     }
 
 
-class Sale(Transaction):
+class Sale(Storm):
     """
     I am a type of transaction
     """

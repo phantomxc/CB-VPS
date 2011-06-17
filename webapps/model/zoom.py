@@ -3,6 +3,8 @@ from storm.locals import *
 import csv
 from datetime import datetime
 
+import sys
+sys.stdout = sys.stderr
 
 class Zoom(Storm):
     """
@@ -12,10 +14,11 @@ class Zoom(Storm):
     
     id = Int(primary=True)
     email = Unicode(validator=unicoder)
+    sent_date = Date(validator=datify)
     submit_date = Date()
-    avg_score = Int()
-    client_id = Int()
-    employee_id = Int()
+    avg_score = Int(validator=intify)
+    client_id = Int(validator=intify)
+    employee_id = Int(validator=intify)
 
     #References
     qa = ReferenceSet(id, 'ZoomQA.z_id')
@@ -25,6 +28,7 @@ class Zoom(Storm):
         """
         Requires a web.py file object for the survey
         """
+
         # write the upload to a tmp file
         f = open('/tmp/' + survey.filename, "w")
         f.write(survey.file.read())

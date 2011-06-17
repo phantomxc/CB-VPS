@@ -1,5 +1,5 @@
 from storm.locals import *
-from storm.expr import And, LeftJoin
+from storm.expr import And, LeftJoin, Avg
 
 from webpy.dark import *
 from model.company import *
@@ -8,6 +8,11 @@ from model.users import *
 
 from itertools import izip
 from datetime import date
+import sys
+
+from decimal import Decimal as Dec
+
+sys.stdout = sys.stderr
 
 class Report(Storm):
     """
@@ -70,14 +75,8 @@ class Report(Storm):
                 self.filters['args'],
                 self.filters['operators']
             )
-            self.origin = self.buildJoin(self.filters['objects']) 
-            #self.origin = [Transaction, Join(self.trans_obj, self.trans_obj.trans_id == Transaction.id)]
-
-            #self.subselect = Select(Transaction.id, Transaction.company_id.is_in(self.companies),
-            #    Transaction.division_id.is_in(self.divisions),Transaction.region_id.is_in(self.regions))
-
-            #self.transactions = self.store.find(Transaction, Transaction.id.is_in(self.subselect))
-            self.transactions = self.store.using(*self.origin).find(Transaction, And(*self.exp),
+            origin = self.buildJoin(self.filters['objects']) 
+            self.trans = self.store.using(*origin).find(Transaction, And(*self.exp),
                 And(Transaction.id.is_in([tran.id for tran in self.trans])))
 
 
@@ -155,4 +154,127 @@ class Report(Storm):
                 expressions = self.buildAndOr(o, expressions, [ fieldObj > a ])
 
         return expressions
-            
+
+
+    # METRICS
+
+    @property
+    def avg_survey_score(self):
+        """
+        Average Survey Score of all transactions with a attached survey
+        """
+        survey_count = 0
+        survey_scores = []
+        for tran in self.trans:
+            if tran.survey:
+                survey_count += 1
+                answers = [qa.answer for qa in tran.survey.qa]
+                scores = []
+                for a in answers:
+                    try:
+                        scores.append(int(a))
+                    except:
+                        pass
+                s_score = Dec(sum(scores)) / Dec(len(scores))
+                survey_scores.append(s_score)
+        avg = 0
+        if survey_scores:
+            avg = Dec(sum(survey_scores)) / Dec(len(survey_scores))
+            avg = "%.2f" % avg
+        return avg
+
+    
+    @property
+    def avg_value_add(self):
+        
+        value_amounts = []
+        for tran in self.trans:
+            value = tran.tchild.value_add
+            if value:
+                value_amounts.append(value)
+        return sum(value_amounts) / len(value_amounts)
+
+
+    @property
+    def sqft_reduction():
+        return
+
+    
+    @property
+    def avg_days_business_terms():
+        return
+    
+    
+    @property
+    def avg_days_deal_close():
+        return
+    
+
+    @property
+    def market_survey_ontime():
+        return
+
+    
+    @property
+    def rfp_ontime():
+        return
+
+
+    @property
+    def engagement():
+        return
+
+
+    @property
+    def avg_base_rent():
+        return
+
+
+    @property
+    def avg_time_on_market():
+        return
+
+
+    @property
+    def num_survey_responses():
+        return
+
+
+    @property
+    def survey_resp_ratio():
+        return
+
+
+    @property
+    def bov_on_time():
+        return
+
+
+    @property
+    def meet_bov():
+        return
+
+
+    @property
+    def annual_survey():
+        return
+
+
+    @property
+    def lease_abstract_efficiency():
+        return
+
+
+    @property
+    def monthly_reporting_efficiency():
+        return
+
+
+    @property
+    def overall_client_satisfaction():
+        return
+
+
+    @property
+    def total_occupancy_cost():
+        return
