@@ -329,21 +329,9 @@ class Report(Storm):
     @property
     def avg_time_on_market(self):
         """
-        This seems to be the same as avg time to deal closing
+        This is duplicate data with a different titile for the bosses
         """
-
-        for tran in self.trans:
-            engage = tran.engage_date
-            if not engage:
-                continue
-            
-            close = tran.tchild.closing_date
-            if not close:
-                continue
-
-            diff = close - engage
-
-        return 'N/A'
+        return self.avg_days_deal_close
         
 
 
@@ -387,9 +375,6 @@ class Report(Storm):
         ontime = 0
 
         for tran in self.trans:
-            print 'hmm'
-            print tran
-            print tran.tchild
             if tran.tchild.bov_date:
                 bov += 1
             if tran.tchild.bov_ontime:
@@ -401,30 +386,114 @@ class Report(Storm):
             return Dec(p)
 
     @property
-    def meet_bov():
-        return
+    def meet_bov_timing(self):
+        """
+        Percentage of bov timing that meet or exceeded expectations
+        """
+        exceed = 0
+        below = 0
+        for tran in self.trans:
+            if tran.tchild.bov_date:
+                expected = tran.tchild.bov_expected_timing
+                if not expected:
+                    continue
+                actual = tran.tchild.bov_actual_timing
+
+                if not actual:
+                    continue
+
+                if actual - expected > 0:
+                    below += 1
+                else:
+                    exceed += 1
+        if exceed or below:
+            p = (Dec(exceed) / Dec(exceed + below)) * 100
+            p = "%.2f" % p
+            return Dec(p)
+            
+
+    
+    @property
+    def total_recovery(self):
+        """
+        Total recovery from all dispositions. 
+        (actual_recovery, total_savings, sale_price)
+        """
+
+        amounts = []
+
+        for tran in self.trans:
+            recovery = tran.tchild.recovery
+            if not recovery:
+                continue
+            amounts.append(recovery)
+        if amounts:
+            return sum(amounts)
+
+
+    @property
+    def meet_bov_recovery(self):
+        """
+        Percentage of bov recovery that meet or exceeded expectations
+        """
+        
+        exceed = 0
+        below = 0
+
+        for tran in self.trans:
+            expected = tran.tchild.exp_recovery
+            actual = tran.tchild.recovery 
+            if not expected:
+                continue
+            if not actual:
+                continue
+
+            if actual - expected > 0:
+                below += 1
+            else:
+                exceed += 1
+        
+        if exceed or below:
+            p = (Dec(exceed) / Dec(exceed + below)) * 100
+            p = "%.2f" % p
+            return Dec(p)
 
 
     @property
     def annual_survey():
+        """
+        Manual Input
+        """
         return
 
 
     @property
     def lease_abstract_efficiency():
+        """
+        Manual Input
+        """
         return
 
 
     @property
     def monthly_reporting_efficiency():
+        """
+        Manual Input
+        """
         return
 
 
     @property
     def overall_client_satisfaction():
+        """
+        Manual Input ??
+        """
         return
 
 
     @property
     def total_occupancy_cost():
+        """
+        Manual Input
+        """
         return

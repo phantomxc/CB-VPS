@@ -295,6 +295,22 @@ class SubLease(Storm):
         """
         return self.sublease_execution_date
 
+    
+    @property
+    def recovery(self):
+        """
+        Unified recovery amount
+        """
+        return self.actual_recovery
+
+
+    @property
+    def exp_recovery(self):
+        """
+        Unified expected recovery amount
+        """
+        return self.expected_recovery
+
 
 
 class LeaseTermination(Storm):
@@ -349,6 +365,22 @@ class LeaseTermination(Storm):
         return self.ltd_execution_date
 
 
+    @property
+    def recovery(self):
+        """
+        Unified recovery amount
+        """
+        return self.total_savings
+
+    
+    @property
+    def exp_recovery(self):
+        """
+        Unified expected recovery amount
+        """
+        return self.expected_savings
+
+
 
 class Sale(Storm):
     """
@@ -400,4 +432,19 @@ class Sale(Storm):
         Unified closing date name
         """
         return self.sale_closing_date
+    
+    
+    @property
+    def recovery(self):
+        """
+        Unified recovery amount
+        """
+        return self.sale_price
+
+    @property
+    def exp_recovery(self):
+        """
+        Unified expected recovery amount
+        """
+        return self.expected_sale_price
 

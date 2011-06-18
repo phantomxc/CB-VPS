@@ -236,7 +236,7 @@ class TestReport(TestCase):
         r = Report(trans_obj='acquisition')
         r.buildReport()
 
-        self.assertEqual(r.avg_time_on_market, 2)
+        self.assertEqual(r.avg_time_on_market, Dec('1.5'))
 
     def test_num_of_surveys(self):
         """
@@ -264,7 +264,7 @@ class TestReport(TestCase):
         self.t2.survey_sent = '2011-05-01'
 
         self.store.commit()
-        
+       
         r = Report(trans_obj='acquisition')
         r.buildReport()
 
@@ -285,6 +285,12 @@ class TestReport(TestCase):
         self.sl3 = self.fstore(SubLease())
         self.t3.trans_type = 'Sublease'
         self.sl3.trans_id = self.t3.id
+
+        self.t4 = self.fstore(Transaction())
+        self.t4.trans_type = 'Sale'
+        self.s1 = self.fstore(Sale())
+        self.store.flush()
+        self.s1.trans_id = self.t4.id
         self.store.commit()
         
 
@@ -295,8 +301,6 @@ class TestReport(TestCase):
 
         self.build_disp()
 
-        print self.t1.trans_type
-
         self.sl1.bov_ontime = True
         self.sl2.bov_ontime = False
         self.sl3.bov_ontime = True
@@ -306,7 +310,6 @@ class TestReport(TestCase):
         self.sl3.bov_date = '2011-05-11'
 
         self.store.commit()
-        print self.t1.tchild.bov_ontime
 
         r = Report(trans_obj='disposition')
         r.buildReport()
@@ -314,12 +317,103 @@ class TestReport(TestCase):
         self.assertEqual(r.bov_on_time, Dec('66.67'))
 
     
-    def test_meet_bov(self):
+    def test_meet_bov_timing(self):
         """
         Test percentage of bov timing that meet or exceeded expectations
         """
-
         
+        self.build_disp()
+
+        self.sl1.bov_expected_timing = 10
+        self.sl1.bov_actual_timing = 9
+
+        self.sl2.bov_expected_timing = 10
+        self.sl2.bov_actual_timing = 10
+        
+        self.sl3.bov_expected_timing = 10
+        self.sl3.bov_actual_timing = 11
+
+        self.store.commit()
+
+        r = Report(trans_obj='disposition')
+        r.buildReport()
+
+        self.assertEqual(r.meet_bov_timing, Dec('66.67'))
+
+        self.sl3.bov_actual_timing = 10
+        self.store.commit()
+        
+        r = Report(trans_obj='disposition')
+        r.buildReport()
+        
+        self.assertEqual(r.meet_bov_timing, Dec('100.0'))
+
+
+    def test_total_recovery(self):
+        """
+        Tracks the total dollars recovered from dispositions
+        """
+
+        self.build_disp()
+
+        self.sl1.actual_recovery = 1000.67
+        self.sl2.actual_recovery = 4000.14
+
+        self.s1.sale_price = 20000.00
+        self.store.commit()
+
+        r = Report(trans_obj='disposition')
+        r.buildReport()
+
+        self.assertEqual(r.total_recovery, Dec('25000.81'))
+
+
+
+
+    def test_meet_bov_recovery(self):
+        """
+        Test percentage of bov recovery that meet or exceeded expectations
+        """
+
+        self.build_disp()
+
+        self.sl1.actual_recovery = 1000
+        self.sl2.actual_recovery = 500
+
+        self.sl1.expected_recovery = 700
+        self.sl2.expected_recovery = 600
+        
+        self.store.commit()
+
+        r = Report(trans_obj='disposition')
+        r.buildReport()
+
+        self.assertEqual(r.meet_bov_recovery, Dec('50.0'))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 if __name__ == '__main__':
