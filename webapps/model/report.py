@@ -177,78 +177,228 @@ class Report(Storm):
                         pass
                 s_score = Dec(sum(scores)) / Dec(len(scores))
                 survey_scores.append(s_score)
-        avg = 0
         if survey_scores:
             avg = Dec(sum(survey_scores)) / Dec(len(survey_scores))
             avg = "%.2f" % avg
-        return avg
+            return avg
+        return 'N/A'
 
     
     @property
     def avg_value_add(self):
-        
+        """
+        Determine the average value added of all selected transactions
+        """
         value_amounts = []
         for tran in self.trans:
-            value = tran.tchild.value_add
-            if value:
-                value_amounts.append(value)
-        return sum(value_amounts) / len(value_amounts)
+            if tran.tchild:
+                value = tran.tchild.value_add
+                if value:
+                    value_amounts.append(value)
+        
+        if value_amounts:
+            return Dec(sum(value_amounts)) / Dec(len(value_amounts))
+        return 'N/A'
 
 
     @property
-    def sqft_reduction():
-        return
+    def sqft_reduction(self):
+        """
+        This is the net difference between old sqft and new sqft across the portfolio
+        """
+        sqft_amounts = []
+        for tran in self.trans:
+            old_sqft = tran.tchild.old_sqft
+            new_sqft = tran.tchild.new_sqft
+            if old_sqft and new_sqft:
+                sqft = old_sqft - new_sqft
+                sqft_amounts.append(sqft)
+        if sqft_amounts:
+            return sum(sqft_amounts)
+        return 'N/A'
 
     
     @property
-    def avg_days_business_terms():
+    def avg_days_business_terms(self):
+        """
+        Tracks the days between engagement date and loi date. This tells how long it takes
+        to negotiate.
+        """
         return
     
     
     @property
-    def avg_days_deal_close():
-        return
+    def avg_days_deal_close(self):
+        """
+        Tracks the days between engagement date and deal closing (or execution date 
+        in the case of dispositions). 
+        """
+        
+        days = []
+        for tran in self.trans:
+           
+            engage = tran.engage_date
+            close = tran.tchild.lease_execution_date
+            
+            if not engage:
+                continue
+            
+            if not close:
+                continue
+
+            diff = close - engage
+            days.append(diff.days)
+        
+        if days:
+            return Dec(sum(days)) / Dec(len(days))
+        return 'N/A'
     
 
     @property
-    def market_survey_ontime():
-        return
+    def market_survey_ontime(self):
+        """
+        Should be done within 2 weeks of when a client engages cbre. %
+        """
+        ontime = 0
+        not_ontime = 0
 
+        for tran in self.trans:
+            if tran.tchild.market_survey:
+                engage = tran.engage_date
+                if not engage:
+                    continue
+                market = tran.tchild.market_survey_date
+                if not market:
+                    continue
+                diff = market - engage
+                if diff.days <= 14:
+                    ontime += 1
+                else:
+                    not_ontime += 1
+
+        if ontime:
+            return (Dec(ontime) / Dec(ontime + not_ontime)) * 100
+        return 'N/A'
+    
     
     @property
-    def rfp_ontime():
+    def rfp_ontime(self):
+        """
+        Boolean yes or no, if no answer defaults to no.
+        """
+        
+        ontime = 0
+        not_ontime = 0
+
+        for tran in self.trans:
+            if not tran.tchild.rfp_on_time:
+                not_ontime += 1
+                continue
+            ontime += 1
+        
+        p = (Dec(ontime) / Dec(ontime + not_ontime)) * 100
+        p = "%.2f" % p
+        return Dec(p)
+
+
+    @property
+    def engagement(self):
+        """
+        I think this will be manually input on metrics definition
+        """
         return
 
 
     @property
-    def engagement():
-        return
+    def avg_base_rent(self):
+        """
+        Average base rent of all transactions...
+        """
+
+        rent_amounts = []
+        for tran in self.trans:
+            rent = tran.tchild.average_base_rent
+            if not rent:
+                continue
+            rent_amounts.append(rent)
+
+        if rent_amounts:
+            return Dec(sum(rent_amounts)) / Dec(len(rent_amounts))
 
 
     @property
-    def avg_base_rent():
-        return
+    def avg_time_on_market(self):
+        """
+        This seems to be the same as avg time to deal closing
+        """
+
+        for tran in self.trans:
+            engage = tran.engage_date
+            if not engage:
+                continue
+            
+            close = tran.tchild.closing_date
+            if not close:
+                continue
+
+            diff = close - engage
+
+        return 'N/A'
+        
 
 
     @property
-    def avg_time_on_market():
-        return
+    def num_survey_responses(self):
+        """
+        Total number of surveys received
+        """
+
+        count = 0
+        for tran in self.trans:
+            if tran.survey_id:
+                count += 1
+        return count
 
 
     @property
-    def num_survey_responses():
-        return
+    def survey_resp_ratio(self):
+        """
+        Ratio of surveys received compared to surveys sent
+        """
+        
+        sent = 0
+        received = 0
 
+        for tran in self.trans:
+            if tran.survey_sent:
+                sent += 1
+            if tran.survey_id:
+                received += 1
+        if sent:
+            return (Dec(received) / Dec(sent)) * 100
+
+    ##
+    ## DISPOSITIONS
+    ##
 
     @property
-    def survey_resp_ratio():
-        return
+    def bov_on_time(self):
+        bov = 0
+        ontime = 0
 
+        for tran in self.trans:
+            print 'hmm'
+            print tran
+            print tran.tchild
+            if tran.tchild.bov_date:
+                bov += 1
+            if tran.tchild.bov_ontime:
+                ontime += 1
 
-    @property
-    def bov_on_time():
-        return
-
+        if bov:
+            p = (Dec(ontime) / Dec(bov)) * 100
+            p = "%.2f" % p
+            return Dec(p)
 
     @property
     def meet_bov():

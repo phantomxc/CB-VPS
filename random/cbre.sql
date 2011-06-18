@@ -19,7 +19,8 @@ create table transactions (
     client_trans_manager text,
     trans_type text,
     engage_date date,
-    rebc_entry_date date
+    rebc_entry_date date,
+    survey_sent date
 );
 
 create table new_lease (
@@ -194,7 +195,6 @@ create table clientproperties (
 create table zoomerang (
     id serial,
     email text,
-    sent_date date,
     submit_date date,
     avg_score integer,
     client_id integer,

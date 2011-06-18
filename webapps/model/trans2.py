@@ -25,6 +25,7 @@ class Transaction(Storm):
     #Dates
     engage_date = Date(validator=datify)
     rebc_entry_date = Date(validator=datify)    
+    survey_sent = Date(validator=datify)
     
     #References
     prop = Reference(property_id, 'ClientProperty.id')
@@ -132,6 +133,15 @@ class NewLease(Storm):
         'nl10':'notes'
     }
 
+    @property
+    def closing_date(self):
+        """
+        Unified closing date name
+        """
+        return self.lease_execution_date
+
+
+
 class LeaseExtension(Storm):
     """
     I am a type of transaction
@@ -175,6 +185,14 @@ class LeaseExtension(Storm):
         'le10':'notes'
     }
 
+    @property
+    def closing_date(self):
+        """
+        Unified closing date name
+        """
+        return self.lease_execution_date
+
+
 
 class Purchase(Storm):
     """
@@ -216,6 +234,14 @@ class Purchase(Storm):
         'p8':'notes',
         'p9':'market_survey',
     }
+    
+    @property
+    def closing_date(self):
+        """
+        Unified closing date name
+        """
+        return self.purchase_close_date
+
 
 
 class SubLease(Storm):
@@ -261,6 +287,15 @@ class SubLease(Storm):
         'sl10':'bov_ontime'
     }
 
+    
+    @property
+    def closing_date(self):
+        """
+        Unified closing date name
+        """
+        return self.sublease_execution_date
+
+
 
 class LeaseTermination(Storm):
     """
@@ -304,6 +339,15 @@ class LeaseTermination(Storm):
         'lt9':'notes',
         'lt10':'bov_ontime'
     }
+    
+
+    @property
+    def closing_date(self):
+        """
+        Unified closing date name
+        """
+        return self.ltd_execution_date
+
 
 
 class Sale(Storm):
@@ -348,4 +392,12 @@ class Sale(Storm):
         's9':'notes',
         's10':'bov_ontime'
     }
+    
+    
+    @property
+    def closing_date(self):
+        """
+        Unified closing date name
+        """
+        return self.sale_closing_date
 

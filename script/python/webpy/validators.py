@@ -30,8 +30,9 @@ def decimify(obj, name, value):
     
     if value is not None:
         try:
-            import decimal
-            return decimal.Decimal(value)
+            from decimal import Decimal as Dec
+            value = str(value)
+            return Dec(value)
         except:
             pass
 
@@ -43,7 +44,7 @@ def datify(obj, name, value):
     if value is not None:
         try:
             from datetime import date as mydate
-            m, d, y = map(int, value.split('-'))
+            y, m, d = map(int, value.split('-'))
             return mydate(y, m, d)
         except:
             pass
@@ -55,7 +56,7 @@ def boolify(obj, name, value):
     
     if value is not None:
         try:
-            if value in ['True', 'true', 't']:
+            if value in ['True', 'true', 't', True]:
                 return True
             return False
         except:
