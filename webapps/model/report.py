@@ -15,6 +15,7 @@ from decimal import Decimal as Dec
 
 sys.stdout = sys.stderr
 
+
 class Report(Storm):
     """
     I represent a report generated off the Dashboard
@@ -52,6 +53,9 @@ class Report(Storm):
 
         self.client = self.store.find(Client, Client.id == int(client_id)).one()
         self.metrics = self.client.metrics
+
+        if len(self.companies) == 1:
+            self.company = self.store.find(Company, Company.id == int(self.companies[0])).one()
 
     def returnMetric(self, field):
         """
@@ -128,7 +132,7 @@ class Report(Storm):
         if 'Int' in str(type(t)):
             return int(a)
         if 'Date' in str(type(t)):
-            m, d, y = map(int, a.split('-'))
+            y, m, d = map(int, a.split('-'))
             return date(y, m, d)
 
     def buildAndOr(self, op, baseExp, joiner):
@@ -172,6 +176,9 @@ class Report(Storm):
                 expressions = self.buildAndOr(o, expressions, [ fieldObj < a ])
             elif c == '>':
                 expressions = self.buildAndOr(o, expressions, [ fieldObj > a ])
+            
+            elif c == '>=':
+                expressions = self.buildAndOr(o, expressions, [ fieldObj >= a ])
 
         return expressions
 
@@ -246,7 +253,24 @@ class Report(Storm):
         Tracks the days between engagement date and loi date. This tells how long it takes
         to negotiate.
         """
+        days = []
+        for tran in self.trans:
+            engage = tran.engage_date
+            loi = tran.loi_date
+            
+            if not engage:
+                continue
+            if not loi:
+                continue
+            diff = loi - engage
+            days.append(diff.days)
+
+        if days:
+            avg = Dec(sum(days)) / Dec(len(days))
+            avg = "%.2f" % avg
+            return avg
         return 'N/A'
+
     
     
     @property
@@ -276,6 +300,34 @@ class Report(Storm):
             avg = "%.2f" % avg
             return avg
 
+        return 'N/A'
+    
+    @property
+    def avg_days_loi_to_deal_close(self):
+        """
+        Tracks the days between loi and deal closing (or execution date 
+        in the case of dispositions). 
+        """
+        
+        days = []
+        for tran in self.trans:
+           
+            loi = tran.loi_date
+            close = tran.tchild.closing_date
+            
+            if not loi:
+                continue
+            
+            if not close:
+                continue
+
+            diff = close - loi
+            days.append(diff.days)
+        
+        if days:
+            avg = Dec(sum(days)) / Dec(len(days))
+            avg = "%.2f" % avg
+            return avg
         return 'N/A'
     
 

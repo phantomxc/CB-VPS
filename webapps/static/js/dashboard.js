@@ -88,8 +88,29 @@ Dashboard.prototype = {
     scriptifyCompanies: function(li) {
         this.collapsables(li.content);    
         this.setupForm();
+
+        // build the selected client default report
+        this.defaultReport(this.globalParams['client_id']);
+
+
     },
-    
+    defaultReport: function(client_id) {
+        var act = (this.ltabs.chosen == this.ltabs.t1) ? 'acquisition': 'disposition';
+        new Ajax.Request('default_report', {
+            method:'POST',
+            parameters:{'client_id':client_id, 'trans_obj':act},
+            onSuccess: function(resp) {
+                if (this.ltabs.chosen == this.ltabs.t1) {
+                    $('acq').update(resp.responseText);
+                } else {
+                    $('disp').update(resp.responseText);
+                }
+            }.bind(this),
+            onFailure: function(ev) {
+                alert('error');
+            }
+        });
+    },
     // Make the companies tab collapsables
     collapsables: function(content) {
         // start the collapsable containers hidden
@@ -112,17 +133,21 @@ Dashboard.prototype = {
             });
         });
 
-        content.select('input.cbox').each(function(cbox) {
-            cbox.observe('click', function(ev) {
-                var col_div = this.up(1).next();
-                col_div.select('input.cbox').each(function(child_boxes) {
-                    child_boxes.checked = true;
-                });
-            });
-        });
+// I don't think I want this auto child select. Its annoying
+//
+//        content.select('input.cbox').each(function(cbox) {
+//            cbox.observe('click', function(ev) {
+//                var col_div = this.up(1).next();
+//                col_div.select('input.cbox').each(function(child_boxes) {
+//                    child_boxes.checked = true;
+//                });
+//            });
+//        });
     },
 
     setupForm: function() {
+        var active_client = $('active_client_id').getValue();
+        this.globalParams['client_id'] = active_client;
         Event.observe('dashboard_form', 'submit', function(event) {
             var act = (this.ltabs.chosen == this.ltabs.t1) ? 'acquisition': 'disposition';
             var act_div = (this.ltabs.chosen == this.ltabs.t1) ? $('acq') : $('disp');
@@ -152,11 +177,13 @@ Dashboard.prototype = {
 
 }
 
-document.observe("dom:loaded", function(ev) {
 
-    var fields = [ {'name':'Old SQFT', 'imap':'old', 'type':'int'}, {'name':'Market Survey', 'imap':'mksvy','type':'bool'}]
-    var types = [ {'name':'int', 'constraints':[{'name':'is LESS than','args':1}, {'name':'is GREATER than', 'args':1}]},{'name':'bool', 'constraints':[ {'name':'True', 'args:':0}, {'name':'False', 'args':0}]}];
-    var page = new Dashboard();
+function buildFilters(types) {
+    var fields = [ {'name':'Old SQFT', 'imap':'old', 'type':'int'}, {'name':'Market Survey', 'imap':'mksvy','type':'bool'},
+        {'name':'Survey Date', 'imap':'survey_date', 'type':'date'},
+        {'name':'Notes', 'imap':'notes', 'type':'text'}
+    ]
+    
     var acq_filters = new Filters('acq_filter_table');
     acq_filters.addTypes(types);
     acq_filters.addFields(fields);
@@ -166,6 +193,20 @@ document.observe("dom:loaded", function(ev) {
     disp_filters.addTypes(types);
     disp_filters.addFields(fields);
     disp_filters.start();
+}
+
+document.observe("dom:loaded", function(ev) {
+    this.types = '';
+    var page = new Dashboard();
+    
+
+    new Ajax.Request('filter_types', {
+        method:'GET',
+        onSuccess: function(resp) {
+            this.types = resp.responseJSON;
+            buildFilters(this.types);
+        }.bind(this)
+    });
 });
 
 

@@ -5,7 +5,7 @@ from model.client_prop import ClientProperty
 
 class TransFuncs(object):
     """
-    Functions that apply to all 
+    Functions that apply to all transactions
     """
     
     def create(self, **kwargs):
@@ -50,6 +50,7 @@ class Transaction(Storm, TransFuncs):
     engage_date = Date(validator=datify)
     rebc_entry_date = Date(validator=datify)    
     survey_sent = Date(validator=datify)
+    loi_date = Date(validator=datify)
     
     #References
     prop = Reference(property_id, 'ClientProperty.id')
@@ -73,6 +74,7 @@ class Transaction(Storm, TransFuncs):
         'pid':'property_id', 'sid':'survey_id',
         'ctman':'client_trans_manager', 'ttpe':'trans_type',
         'eda':'engage_date', 'rebc':'rebc_entry_date',
+        'loi':'loi_date'
     }
 
 

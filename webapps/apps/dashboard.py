@@ -5,13 +5,18 @@ from model.users import *
 from model.company import *
 from model.report import Report
 
+from model.filters import FieldTypes
+
+import datetime
 
 urls = (
     '', 'dash',
     '/', 'dash',
     'companies', 'dashCompanies',
     'filters', 'dashFilters',
+    'filter_types', 'returnFilterTypes',
     'report', 'buildReport',
+    'default_report', 'defaultReport',
 )
 
 class dash:
@@ -57,19 +62,72 @@ class dashFilters:
 
 
 
+class returnFilterTypes:
+    """
+    Pass the filter types to the javascript
+    """
+
+    def GET(self):
+        types = FieldTypes()
+        return return_json(types.returnTypes())
+
+
+
+class defaultReport:
+
+    def POST(self):
+        
+        today = datetime.date.today()
+        if today.month < 10:
+            year = int(today.year)
+            year = year - 1
+            fiscal_date = '%s-10-01' %  year
+        else:
+            fiscal_date = '%s-10-01' % today.year
+
+        filters = {
+            'objects':['Transaction'],
+            'fields':['eda'],
+            'constraints':['>='],
+            'args':[fiscal_date],
+            'operators':['none']
+        }
+        i = web.input(comp_cbox=[], div_cbox=[], reg_cbox=[], area_cbox=[])
+        
+        reports = []
+
+        report = Report(client_id=i.client_id, trans_obj=i.trans_obj, filters=filters)
+        report.buildReport()
+        reports.append(report)
+
+        if i.trans_obj == 'acquisition':
+            return jrender('/dashboard/acq_report.html', {'reports':reports})
+        else:
+            return jrender('/dashboard/disp_report.html', {'reports':reports})
+
+
 class buildReport:
     
     
     def POST(self):
         i = web.input(comp_cbox=[], div_cbox=[], reg_cbox=[], area_cbox=[])
+        
+        reports = []
 
-        report = Report(client_id=i.client_id, companies=i.comp_cbox, divisions=i.div_cbox, regions=i.reg_cbox, areas=i.area_cbox, trans_obj=i.trans_obj)
-        report.buildReport()
+        if i.display == 'Combined':
+            report = Report(client_id=i.client_id, companies=i.comp_cbox, divisions=i.div_cbox, regions=i.reg_cbox, areas=i.area_cbox, trans_obj=i.trans_obj)
+            report.buildReport()
+            reports.append(report)
+        else:
+            for cid in i.comp_cbox:
+                report = Report(client_id=i.client_id, companies=[cid], divisions=i.div_cbox, regions=i.reg_cbox, areas=i.area_cbox, trans_obj=i.trans_obj)
+                report.buildReport()
+                reports.append(report)
 
         if i.trans_obj == 'acquisition':
-            return jrender('/dashboard/acq_report.html', {'report':report})
+            return jrender('/dashboard/acq_report.html', {'reports':reports})
         else:
-            return jrender('/dashboard/disp_report.html', {'report':report})
+            return jrender('/dashboard/disp_report.html', {'reports':reports})
 
         
 

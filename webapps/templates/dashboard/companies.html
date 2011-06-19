@@ -1,6 +1,6 @@
 <div class="half_tab_padding">
     Clients:<br />
-    <select name="client_id">
+    <select id="active_client_id" name="client_id">
     [[ for client in clients ]]
         <option value="[- client.id -]" [- 'SELECTED="SELECTED"' if selected_client.id == client.id -] >[- client.email -]</option> 
     [[ endfor ]]
@@ -57,7 +57,21 @@
         </div>
     [[ endfor ]]
 </div>
-
+<br />
+<br />
+<div class="half_tab_padding">
+    OPTIONS
+    <hr></hr>
+</div>
+<div class="coll_title grey">
+    Display Results: 
+    <span style="float:right; margin-right:15px; position:relative; top:-2px;">
+        <select name="display">
+            <option>Combined</option>
+            <option>Separate</option>
+        </select>
+    </span>
+</div>
 <div>
     <br />
     <input id="run_report" style="float:right; margin-right:15px;" type="submit" value="Run Report">

@@ -33,6 +33,7 @@ class Metrics(Storm):
             'avg_days_business_terms', 'avg_days_deal_close', 'market_survey_ontime',
             'rfp_ontime', 'avg_time_on_market', 'survey_resp_ratio',
             'bov_on_time', 'meet_bov_timing', 'meet_bov_recovery',
+            'avg_days_loi_to_deal_close'
         ]
 
         for f in field_list:

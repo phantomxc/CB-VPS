@@ -29,7 +29,7 @@ Filters.prototype = {
 
     clear: function() {
         var tr = new Element('tr');
-        var th = '<th></th><th></th><th>Field</th><th>Constraint</th><th>Arguments</th><th></th>';
+        var th = '<th></th><th></th><th>Criteria</th><th>Constraint</th><th>Value</th><th></th>';
         tr.update(th);
         this.element.update(tr);
         this.insert_row_after(this.addRow());
@@ -125,7 +125,11 @@ Filters.prototype = {
                 this.constraint.update();
                 
                 constraints.each(function(cons) {
-                    var opt = new Element('option').update(cons.name);
+                    if (cons.value) {
+                        var opt = new Element('option', {'value':cons.value}).update(cons.name);
+                    } else {
+                        var opt = new Element('option').update(cons.name);
+                    }
                     opt.args = cons.args;
                     this.constraint.insert(opt);
                 }.bind(this));
