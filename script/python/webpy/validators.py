@@ -19,8 +19,14 @@ def intify(obj, name, value):
 
     if value is not None:
         try:
+            if isinstance(value, int):
+                return value
+            if ',' in value:
+                value = value.replace(',','')
             return int(value)
         except:
+            print value
+            print 'int boom'
             pass
 
 def decimify(obj, name, value):
@@ -34,6 +40,7 @@ def decimify(obj, name, value):
             value = str(value)
             return Dec(value)
         except:
+            print 'dec boom'
             pass
 
 def datify(obj, name, value):

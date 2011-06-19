@@ -17,6 +17,19 @@ table.report_table td.right {
     padding:2px 15px 2px 2px;
 }
 
+table.report_table td.red {
+    background-image:url('/static/img/redbar.png');
+    background-repeat:repeat-y;
+    background-position:right top;
+
+}
+
+table.report_table td.yellow {
+    background-image:url('/static/img/yellowbar.png');
+    background-repeat:repeat-y;
+    background-position:right top;
+}
+
 table.report_table tr.grey {
     background-color:#CCC;
 }

@@ -17,6 +17,7 @@ class Client(Storm):
 
     #References
     companies = ReferenceSet(id, 'Company.client_id')
+    metrics = ReferenceSet(id, 'Metrics.client_id')
 
 class ClientUser(Storm):
     ___storm_table__ = "client_users"

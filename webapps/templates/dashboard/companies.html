@@ -1,6 +1,6 @@
 <div class="half_tab_padding">
     Clients:<br />
-    <select>
+    <select name="client_id">
     [[ for client in clients ]]
         <option value="[- client.id -]" [- 'SELECTED="SELECTED"' if selected_client.id == client.id -] >[- client.email -]</option> 
     [[ endfor ]]

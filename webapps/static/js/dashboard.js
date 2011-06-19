@@ -16,7 +16,7 @@ Dashboard.prototype = {
 
         var rtabs = new Tabs('right_tabs');
         this.rtabs = rtabs;
-        this.rtabs.t1 = rtabs.addTab('Companies', 'companies', 'companies', function(){ return{};}, this.scriptifyCompanies.bind(this));
+        this.rtabs.t1 = rtabs.addTab('Companies', 'companies');
         this.rtabs.t2 = rtabs.addTab('Filters', 'filters_container', '', function() {return{};}, this.scriptifyFilters.bind(this));
 
         this.rtabs.loadingdiv = $('rloading');
@@ -41,6 +41,19 @@ Dashboard.prototype = {
         this.ltabs.start(this.ltabs.t1);
 
         $('disp_filters').hide();
+
+        new Ajax.Request('companies', {
+            method:'POST',
+            parameters: this.globalParams,
+            onSuccess: function(resp) {
+                var li = new Element('li');
+                li.content = $('companies');
+                $('companies').update(resp.responseText);
+                this.scriptifyCompanies(li);
+            }.bind(this)
+        });
+
+        $('companies').update('Loading');
     },
 
     buildGlobals: function() {

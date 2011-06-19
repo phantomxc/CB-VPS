@@ -2,7 +2,31 @@ from webpy.dark import *
 from storm.locals import *
 from model.client_prop import ClientProperty
 
-class Transaction(Storm):
+
+class TransFuncs(object):
+    """
+    Functions that apply to all 
+    """
+    
+    def create(self, **kwargs):
+        """
+        Create a new transaction from kwargs
+        """
+        for k, v in kwargs.items():
+            if k in self.imap:
+                ik = self.interfaceMap(k)
+                if hasattr(self, ik):
+                    setattr(self, ik, v)
+
+    
+    def interfaceMap(self, key):
+        """
+        Return the appropriate attribute name for the key provided
+        """
+        return self.imap[key]
+
+    
+class Transaction(Storm, TransFuncs):
     """
     I represent a client transaction
     """
@@ -41,6 +65,19 @@ class Transaction(Storm):
     leasetermination = Reference(id, 'LeaseTermination.trans_id')
     sale = Reference(id, 'Sale.trans_id')
 
+    
+    imap = {
+        'cid':'client_id', 'coid':'company_id',
+        'did':'division_id', 'rid':'region_id',
+        'aid':'area_id', 'tman':'trans_manager',
+        'pid':'property_id', 'sid':'survey_id',
+        'ctman':'client_trans_manager', 'ttpe':'trans_type',
+        'eda':'engage_date', 'rebc':'rebc_entry_date',
+    }
+
+
+
+    
     @property    
     def tchild(self):
         """
@@ -60,37 +97,10 @@ class Transaction(Storm):
             return self.sale
         else:
             return None
-    
-    imap = {
-        'cid':'client_id', 'coid':'company_id',
-        'did':'division_id', 'rid':'region_id',
-        'aid':'area_id', 'tman':'trans_manager',
-        'pid':'property_id', 'sid':'survey_id',
-        'ctman':'client_trans_manager', 'ttpe':'trans_type',
-        'eda':'engage_date', 'rebc':'rebc_entry_date',
-    }
-
-
-    def create(self, **kwargs):
-        """
-        Create a new transaction from kwargs
-        """
-        for k, v in kwargs.items():
-            if k in self.imap:
-                ik = self.interfaceMap(k)
-                if hasattr(self, ik):
-                    setattr(self, ik, v)
-
-    
-    def interfaceMap(self, key):
-        """
-        Return the appropriate attribute name for the key provided
-        """
-        return self.imap[key]
 
 
 
-class NewLease(Storm):
+class NewLease(Storm, TransFuncs):
     """
     I am a type of transaction
     """
@@ -133,6 +143,7 @@ class NewLease(Storm):
         'nl10':'notes'
     }
 
+
     @property
     def closing_date(self):
         """
@@ -140,9 +151,9 @@ class NewLease(Storm):
         """
         return self.lease_execution_date
 
+    
 
-
-class LeaseExtension(Storm):
+class LeaseExtension(Storm, TransFuncs):
     """
     I am a type of transaction
     """
@@ -185,6 +196,7 @@ class LeaseExtension(Storm):
         'le10':'notes'
     }
 
+
     @property
     def closing_date(self):
         """
@@ -194,7 +206,7 @@ class LeaseExtension(Storm):
 
 
 
-class Purchase(Storm):
+class Purchase(Storm, TransFuncs):
     """
     I am a type of transaction
     """
@@ -235,6 +247,7 @@ class Purchase(Storm):
         'p9':'market_survey',
     }
     
+    
     @property
     def closing_date(self):
         """
@@ -244,7 +257,7 @@ class Purchase(Storm):
 
 
 
-class SubLease(Storm):
+class SubLease(Storm, TransFuncs):
     """
     I am a type of transaction
     """
@@ -313,7 +326,7 @@ class SubLease(Storm):
 
 
 
-class LeaseTermination(Storm):
+class LeaseTermination(Storm, TransFuncs):
     """
     I am a type of transaction
     """
@@ -356,7 +369,7 @@ class LeaseTermination(Storm):
         'lt10':'bov_ontime'
     }
     
-
+    
     @property
     def closing_date(self):
         """
@@ -382,7 +395,7 @@ class LeaseTermination(Storm):
 
 
 
-class Sale(Storm):
+class Sale(Storm, TransFuncs):
     """
     I am a type of transaction
     """

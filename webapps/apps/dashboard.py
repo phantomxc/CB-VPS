@@ -63,7 +63,7 @@ class buildReport:
     def POST(self):
         i = web.input(comp_cbox=[], div_cbox=[], reg_cbox=[], area_cbox=[])
 
-        report = Report(companies=i.comp_cbox, divisions=i.div_cbox, regions=i.reg_cbox, areas=i.area_cbox, trans_obj=i.trans_obj)
+        report = Report(client_id=i.client_id, companies=i.comp_cbox, divisions=i.div_cbox, regions=i.reg_cbox, areas=i.area_cbox, trans_obj=i.trans_obj)
         report.buildReport()
 
         if i.trans_obj == 'acquisition':

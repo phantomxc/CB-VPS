@@ -1,55 +1,47 @@
 <table class="report_table">
     <tr>
-        [[ set metric = report.returnMetric('avg_survey_score') ]]
         <td class="left">Average Survey Score</td>
-        <td class="right [- metric[0] -]">[- metric[1] -]</td>
+        <td class="right">[- report.avg_survey_score -]</td>
     </tr>
     <tr class="grey">
         <td class="left">Number of Survey Responses</td>
         <td class="right">[- report.num_survey_responses -]</td>
     </tr>
     <tr>
-        [[ set metric = report.returnMetric('survey_resp_ratio') ]]
         <td class="left">Survey Response Ratio</td>
-        <td class="right [- metric[0] -]">[- metric[1] -]</td>
+        <td class="right">[- report.survey_resp_ratio -]</td>
     </tr>
     <tr class="grey">
-        [[ set metric = report.returnMetric('avg_value_add') ]]
         <td class="left">Average Value Add %</td>
-        <td class="right[- metric[0] -]">[- metric[1] -]</td>
+        <td class="right red">[- report.avg_value_add -]</td>
     </tr>
     <tr>
         <td class="left">Square Footage Reduction</td>
         <td class="right">[- report.sqft_reduction -]</td>
     </tr>
     <tr class="grey">
-        [[ set metric = report.returnMetric('avg_days_business_terms') ]]
         <td class="left">Average Days to Business Terms</td>
-        <td class="right [- metric[0] -]">[- metric[1] -]</td>
+        <td class="right yellow">[- report.avg_days_business_terms -]</td>
     </tr>
     <tr>
-        [[ set metric = report.returnMetric('avg_days_deal_close') ]]
         <td class="left">Average Days between Business Terms & Closing</td>
-        <td class="right [- metric[0] -]">[- metric[1] -]</td>
+        <td class="right">[- report.avg_days_deal_close -]</td>
     </tr>
     <tr class="grey">
-        [[ set metric = report.returnMetric('market_survey_ontime') ]]
         <td class="left">Markey Survey On Time %</td>
-        <td class="right [- metric[0] -]">[- metric[1] -]</td>
+        <td class="right">[- report.market_survey_ontime -]</td>
     </tr>
     <tr>
-        [[ set metric = report.returnMetric('rfp_ontime') ]]
         <td class="left">RFP On Time %</td>
-        <td class="right [- metric[0] -]">[- metric[1] -]</td>
+        <td class="right">[- report.rfp_ontime -]</td>
     </tr>
     <tr class="grey">
         <td class="left">Average Base Rent</td>
         <td class="right">[- report.avg_base_rent -]</td>
     </tr>
     <tr>
-        [[ set metric = report.returnMetric('avg_time_on_market') ]]
         <td class="left">Average Time On Market</td>
-        <td class="right [- metric[0] -]">[- metric[1] -]</td>
+        <td class="right">[- report.avg_time_on_market -]</td>
     </tr>
     <tr class="grey">
         <td class="left">Annual Survey</td>
@@ -71,5 +63,8 @@
         <td class="left">Total Occupancy Cost</td>
         <td class="right">[- report.total_occupancy_cost -]</td>
     </tr>
+
+
+
 </table>
 

@@ -5,6 +5,7 @@ from webpy.dark import *
 from model.company import *
 from model.trans2 import *
 from model.users import *
+from model.metrics import *
 
 from itertools import izip
 from datetime import date
@@ -19,7 +20,7 @@ class Report(Storm):
     I represent a report generated off the Dashboard
     """
 
-    def __init__(self, companies=[], divisions=[], regions=[], areas=[], trans_obj='acquisition', **kwargs):
+    def __init__(self, client_id=None, companies=[], divisions=[], regions=[], areas=[], trans_obj='acquisition', **kwargs):
         """
         Build the base object
         """
@@ -48,6 +49,25 @@ class Report(Storm):
             self.filters = kwargs['filters']
         else:
             self.filters = []
+
+        self.client = self.store.find(Client, Client.id == int(client_id)).one()
+        self.metrics = self.client.metrics
+
+    def returnMetric(self, field):
+        """
+        take a field name (one of the metrics) and determine its status
+        """
+        
+        m = self.metrics.find(Metrics.field == unicode(field)).one()
+        amount = getattr(self, field)
+        if amount == 'N/A':
+            return ('', amount)
+        if Dec(amount) <= m.bad_amount:
+            return ('red', amount)
+        if Dec(amount) <= m.warn_amount:
+            return ('yellow', amount)
+        return ('', amount)
+
 
     def buildReport(self):
         
@@ -197,7 +217,9 @@ class Report(Storm):
                     value_amounts.append(value)
         
         if value_amounts:
-            return Dec(sum(value_amounts)) / Dec(len(value_amounts))
+            avg = Dec(sum(value_amounts)) / Dec(len(value_amounts))
+            avg = "%.2f" % avg
+            return avg
         return 'N/A'
 
 
@@ -224,7 +246,7 @@ class Report(Storm):
         Tracks the days between engagement date and loi date. This tells how long it takes
         to negotiate.
         """
-        return
+        return 'N/A'
     
     
     @property
@@ -238,7 +260,7 @@ class Report(Storm):
         for tran in self.trans:
            
             engage = tran.engage_date
-            close = tran.tchild.lease_execution_date
+            close = tran.tchild.closing_date
             
             if not engage:
                 continue
@@ -250,7 +272,10 @@ class Report(Storm):
             days.append(diff.days)
         
         if days:
-            return Dec(sum(days)) / Dec(len(days))
+            avg = Dec(sum(days)) / Dec(len(days))
+            avg = "%.2f" % avg
+            return avg
+
         return 'N/A'
     
 
@@ -276,7 +301,7 @@ class Report(Storm):
                 else:
                     not_ontime += 1
 
-        if ontime:
+        if ontime or not_ontime:
             return (Dec(ontime) / Dec(ontime + not_ontime)) * 100
         return 'N/A'
     
@@ -291,14 +316,17 @@ class Report(Storm):
         not_ontime = 0
 
         for tran in self.trans:
+            if not hasattr(tran.tchild, 'rfp_on_time'):
+                continue
             if not tran.tchild.rfp_on_time:
                 not_ontime += 1
                 continue
             ontime += 1
-        
-        p = (Dec(ontime) / Dec(ontime + not_ontime)) * 100
-        p = "%.2f" % p
-        return Dec(p)
+        if ontime or not_ontime: 
+            p = (Dec(ontime) / Dec(ontime + not_ontime)) * 100
+            p = "%.2f" % p
+            return Dec(p)
+        return 'N/A'
 
 
     @property
@@ -317,6 +345,8 @@ class Report(Storm):
 
         rent_amounts = []
         for tran in self.trans:
+            if not hasattr(tran.tchild, 'average_base_rent'):
+                continue
             rent = tran.tchild.average_base_rent
             if not rent:
                 continue
@@ -324,6 +354,7 @@ class Report(Storm):
 
         if rent_amounts:
             return Dec(sum(rent_amounts)) / Dec(len(rent_amounts))
+        return 'N/A'
 
 
     @property
@@ -345,7 +376,9 @@ class Report(Storm):
         for tran in self.trans:
             if tran.survey_id:
                 count += 1
-        return count
+        if count:
+            return count
+        return 'N/A'
 
 
     @property
@@ -363,7 +396,10 @@ class Report(Storm):
             if tran.survey_id:
                 received += 1
         if sent:
-            return (Dec(received) / Dec(sent)) * 100
+            p = (Dec(received) / Dec(sent)) * 100
+            p = "%.2f" % p
+            return p
+        return 'N/A'
 
     ##
     ## DISPOSITIONS
@@ -430,7 +466,6 @@ class Report(Storm):
         if amounts:
             return sum(amounts)
 
-
     @property
     def meet_bov_recovery(self):
         """
@@ -460,40 +495,40 @@ class Report(Storm):
 
 
     @property
-    def annual_survey():
+    def annual_survey(self):
         """
         Manual Input
         """
-        return
+        return 'N/A'
 
 
     @property
-    def lease_abstract_efficiency():
+    def lease_abstract_efficiency(self):
         """
         Manual Input
         """
-        return
+        return 'N/A'
 
 
     @property
-    def monthly_reporting_efficiency():
+    def monthly_reporting_efficiency(self):
         """
         Manual Input
         """
-        return
+        return 'N/A'
 
 
     @property
-    def overall_client_satisfaction():
+    def overall_client_satisfaction(self):
         """
         Manual Input ??
         """
-        return
+        return 'N/A'
 
 
     @property
-    def total_occupancy_cost():
+    def total_occupancy_cost(self):
         """
         Manual Input
         """
-        return
+        return 'N/A'

@@ -85,6 +85,7 @@ class addTrans:
             zoom.client_id = i['cid']
             if sent_date:
                 zoom.sent_date = sent_date
+                t.survey_sent = sent_date
             
             store.flush()
             t.survey_id = zoom.id

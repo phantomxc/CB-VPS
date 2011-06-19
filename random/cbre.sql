@@ -20,7 +20,8 @@ create table transactions (
     trans_type text,
     engage_date date,
     rebc_entry_date date,
-    survey_sent date
+    survey_sent date,
+    loi_date date
 );
 
 create table new_lease (
@@ -207,4 +208,14 @@ create table zoomqa (
     question text,
     answer text,
     z_id integer
+);
+
+
+create table metrics (
+    id serial,
+    client_id integer,
+    field text,
+    title text,
+    warn_amount numeric,
+    bad_amount numeric
 );
