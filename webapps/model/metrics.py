@@ -18,6 +18,7 @@ class Metrics(Storm):
     #Text
     field = Unicode(validator=unicoder)
     title = Unicode(validator=unicoder)
+    operator = Unicode(validator=unicoder)
     
     #Numbers
     warn_amount = Decimal(validator=decimify)

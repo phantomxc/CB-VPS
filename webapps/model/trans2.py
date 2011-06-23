@@ -51,6 +51,7 @@ class Transaction(Storm, TransFuncs):
     rebc_entry_date = Date(validator=datify)    
     survey_sent = Date(validator=datify)
     loi_date = Date(validator=datify)
+    closing_date = Date(validator=datify)
     
     #References
     prop = Reference(property_id, 'ClientProperty.id')
@@ -74,7 +75,7 @@ class Transaction(Storm, TransFuncs):
         'pid':'property_id', 'sid':'survey_id',
         'ctman':'client_trans_manager', 'ttpe':'trans_type',
         'eda':'engage_date', 'rebc':'rebc_entry_date',
-        'loi':'loi_date'
+        'loi':'loi_date', 'cda':'closing_date'
     }
 
 

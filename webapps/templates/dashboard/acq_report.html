@@ -1,86 +1,122 @@
 [[ for report in reports ]]
-    [[ if report.company ]]
+    [[ if report.year1 ]]
+        [[ set year1 = True ]]
+    [[ endif ]]
+    [[ if report.title ]]
         <div class="half_tab_padding">
-            <span class="green_bold"> [- report.company.title -] </span>
+            <span class="green_bold"> [- report.title -] </span>
         </div>
     [[ endif ]]
     <table class="report_table">
         <tr>
+            <th>&nbsp</th>
+            <th>FY 11</th>
+    [[ if report.year1 ]]
+            <th>FY 10</th>
+    [[ endif ]]
+        </tr>
+       
+        <tr>
             [[ set metric = report.returnMetric('avg_survey_score') ]]
             <td class="left">Average Survey Score</td>
             <td class="right [- metric[0] -]">[- metric[1] -]</td>
+            [[ if year1 ]]
+                [[ set metrics = report.year1.returnMetric('avg_survey_score') ]]
+                <td class="right [- metric[0] -]">[- metrics[1] -]</td>
+            [[ endif ]]
         </tr>
         <tr class="grey">
             <td class="left">Number of Survey Responses</td>
             <td class="right">[- report.num_survey_responses -]</td>
+            [[ if year1 ]]
+                <td class="right">[- report.year1.num_survey_responses -]</td>
+            [[ endif ]]
         </tr>
         <tr>
             [[ set metric = report.returnMetric('survey_resp_ratio') ]]
             <td class="left">Survey Response Ratio</td>
             <td class="right [- metric[0] -]">[- metric[1] -]</td>
+            [[ if year1 ]]
+                [[ set metric = report.year1.returnMetric('survey_resp_ratio') ]]
+                <td class="right [- metric[0] -]">[- metric[1] -]</td>
+            [[ endif ]]
         </tr>
         <tr class="grey">
             [[ set metric = report.returnMetric('avg_value_add') ]]
             <td class="left">Average Value Add %</td>
-            <td class="right[- metric[0] -]">[- metric[1] -]</td>
+            <td class="right [- metric[0] -]">[- metric[1] -]</td>
+            [[ if year1 ]]
+                [[ set metric = report.year1.returnMetric('avg_value_add') ]]
+                <td class="right [- metric[0] -]">[- metric[1] -]</td>
+            [[ endif ]]
         </tr>
         <tr>
             <td class="left">Square Footage Reduction</td>
             <td class="right">[- report.sqft_reduction -]</td>
+            [[ if year1 ]]
+                <td class="right"> [- report.year1.sqft_reduction -]</td>
+            [[ endif ]]
         </tr>
         <tr class="grey">
             [[ set metric = report.returnMetric('avg_days_business_terms') ]]
             <td class="left">Average Days to Business Terms</td>
             <td class="right [- metric[0] -]">[- metric[1] -]</td>
+            [[ if year1 ]]
+                [[ set metric = report.year1.returnMetric('avg_days_business_terms') ]]
+                <td class="right [- metric[0] -]">[- metric[1] -]</td>
+            [[ endif ]]
         </tr>
         <tr>
             [[ set metric = report.returnMetric('avg_days_deal_close') ]]
             <td class="left">Average Days To Deal Closing</td>
             <td class="right [- metric[0] -]">[- metric[1] -]</td>
+            [[ if year1 ]]
+                [[ set metric = report.year1.returnMetric('avg_days_deal_close') ]]
+                <td class="right [- metric[0] -]">[- metric[1] -]</td>
+            [[ endif ]]
         </tr>
         <tr class="grey">
             [[ set metric = report.returnMetric('avg_days_loi_to_deal_close') ]]
             <td class="left">Average Days between Business Terms & Closing</td>
             <td class="right [- metric[0] -]">[- metric[1] -]</td>
+            [[ if year1 ]]
+                [[ set metric = report.year1.returnMetric('avg_days_loi_to_deal_close') ]]
+                <td class="right [- metric[0] -]">[- metric[1] -]</td>
+            [[ endif ]]
         </tr>
         <tr class="">
             [[ set metric = report.returnMetric('market_survey_ontime') ]]
             <td class="left">Markey Survey On Time %</td>
             <td class="right [- metric[0] -]">[- metric[1] -]</td>
+            [[ if year1 ]]
+                [[ set metric = report.year1.returnMetric('market_survey_ontime') ]]
+                <td class="right [- metric[0] -]">[- metric[1] -]</td>
+            [[ endif ]]
         </tr>
         <tr class="grey">
             [[ set metric = report.returnMetric('rfp_ontime') ]]
             <td class="left">RFP On Time %</td>
             <td class="right [- metric[0] -]">[- metric[1] -]</td>
+            [[ if year1 ]]
+                [[ set metric = report.year1.returnMetric('rfp_ontime') ]]
+                <td class="right [- metric[0] -]">[- metric[1] -]</td>
+            [[ endif ]]
         </tr>
         <tr class="">
             <td class="left">Average Base Rent</td>
             <td class="right">[- report.avg_base_rent -]</td>
+            [[ if year1 ]]
+                <td class="right"> [- report.year1.avg_base_rent -]</td>
+            [[ endif ]]
         </tr>
         <tr class="grey">
             [[ set metric = report.returnMetric('avg_time_on_market') ]]
             <td class="left">Average Time On Market</td>
             <td class="right [- metric[0] -]">[- metric[1] -]</td>
-        </tr>
-        <tr class="">
-            <td class="left">Annual Survey</td>
-            <td class="right">[- report.annual_survey -]</td>
-        </tr>
-        <tr class="grey">
-            <td class="left">Lease Abstraction Efficiency</td>
-            <td class="right">[- report.lease_abstract_efficiency -]</td>
-        </tr>
-        <tr class="">
-            <td class="left">Monthly Reporting Efficiency</td>
-            <td class="right">[- report.monthly_reporting_efficiency -]</td>
-        </tr>
-        <tr class="grey">
-            <td class="left">Overall Client Satisfaction</td>
-            <td class="right">[- report.overall_client_satisfaction -]</td>
-        </tr>
-        <tr class="">
-            <td class="left">Total Occupancy Cost</td>
-            <td class="right">[- report.total_occupancy_cost -]</td>
+            [[ if year1 ]]
+                [[ set metric = report.year1.returnMetric('avg_time_on_market') ]]
+                <td class="right [- metric[0] -]"> [- metric[1] -]</td>
+            [[ endif ]]
         </tr>
     </table>
 

@@ -63,17 +63,34 @@
     OPTIONS
     <hr></hr>
 </div>
-<div class="coll_title grey">
-    Display Results: 
-    <span style="float:right; margin-right:15px; position:relative; top:-2px;">
-        <select name="display">
-            <option>Combined</option>
-            <option>Separate</option>
-        </select>
-    </span>
-</div>
-<div>
-    <br />
-    <input id="run_report" style="float:right; margin-right:15px;" type="submit" value="Run Report">
-</div>
+<table class="report_table">
+    <tr class="grey">
+        <td class="left">Fiscal Comparison:</td>
+        <td class="right">
+            <select name="fiscal">
+                <option>None</option>
+                <option value="1p">1 Year YTD</option>
+                <option value="1">1 Year</option>
+                <option value="2p">2 Years YTD</option>
+                <option value="2">2 Years</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td class="left">Display Results:</td>
+        <td class="right">
+            <select name="display">
+                <option>Combined</option>
+                <option>Separate</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td>&nbsp;</td><td>&nbsp;</td>
+    </tr>
+    <tr>
+        <td class="left">&nbsp;</td>
+        <td class="right"><input id="run_report" type="submit" value="Run Report"></td>
+    </tr>
+</table>
 

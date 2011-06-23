@@ -43,19 +43,79 @@ class Report(Storm):
             'Transaction':Transaction
         }
 
-
         self.trans_obj = trans_obj
 
-        if 'filters' in kwargs:
-            self.filters = kwargs['filters']
-        else:
-            self.filters = []
 
         self.client = self.store.find(Client, Client.id == int(client_id)).one()
         self.metrics = self.client.metrics
-
+        
+        # REPORT TITLE
         if len(self.companies) == 1:
-            self.company = self.store.find(Company, Company.id == int(self.companies[0])).one()
+            company = self.store.find(Company, Company.id == int(self.companies[0])).one()
+            self.title = company.title
+
+        if len(self.divisions) == 1:
+            div = self.store.find(CompanyDivision, CompanyDivision.id == int(self.divisions[0])).one()
+            self.title = div.company.title
+            self.title += ' &#187 ' + div.title
+
+        if len(self.regions) == 1:
+            reg = self.store.find(CompanyRegion, CompanyRegion.id == int(self.regions[0])).one()
+            self.title = reg.division.title
+            self.title += ' &#187 ' + reg.title
+
+        if len(self.areas) == 1:
+            area = self.store.find(companyArea, CompanyArea.id == int(self.areas[0])).one()
+            self.title = area.region.title
+            self.title += ' &#187 ' + area.title
+
+        today = date.today()
+        if today.month < 10:
+            year = int(today.year)
+            year = year -1
+            current_fiscal_year = '%s-10-01' % year
+            past_1_year = '%s-10-01' % (int(year) - 1)
+            past_2_year = '%s-10-01' % (int(year) - 2)
+        else:
+            current_fiscal_year = '%s-10-01' % today.year
+            past_1_year = '%s-10-01' % int(today.year) - 1
+            past_2_year = '%s-10-01' % int(today.year) - 2
+
+        # Fiscal Comparison
+        if 'fiscal' in kwargs.keys():
+            f = kwargs['fiscal']
+            if f == '1':
+                tmpfilters = {
+                    'objects':['Transaction', 'Transaction'],
+                    'fields':['cda', 'cda'],
+                    'constraints':['<=', '>='],
+                    'args':[current_fiscal_year, past_1_year],
+                    'operators':['none', 'and']
+                }
+                self.year1 = Report(client_id=client_id, companies=companies, divisions=divisions, regions=regions, areas=areas, trans_obj=trans_obj, filters=tmpfilters)
+                self.year1.buildReport()
+
+            elif f == '1p':
+                pass
+            elif f =='2p':
+                pass
+            elif f =='2':
+                pass
+            else:
+                pass
+
+        
+        #FILTERS
+        if 'filters' in kwargs.keys():
+            self.filters = kwargs['filters']
+        else:
+            self.filters = {
+                'objects':['Transaction'],
+                'fields':['cda'],
+                'constraints':['>='],
+                'args':[current_fiscal_year],
+                'operators':['none']
+            }
 
     def returnMetric(self, field):
         """
@@ -64,12 +124,20 @@ class Report(Storm):
         
         m = self.metrics.find(Metrics.field == unicode(field)).one()
         amount = getattr(self, field)
+        operator = m.operator
         if amount == 'N/A':
             return ('', amount)
-        if Dec(amount) <= m.bad_amount:
-            return ('red', amount)
-        if Dec(amount) <= m.warn_amount:
-            return ('yellow', amount)
+        if operator == '<=':
+            if Dec(amount) <= m.bad_amount:
+                return ('red', amount)
+            if Dec(amount) <= m.warn_amount:
+                return ('yellow', amount)
+        elif operator == '>=':
+            if Dec(amount) >= m.bad_amount:
+                return ('red', amount)
+            if Dec(amount) >= m.warn_amount:
+                return ('yellow', amount)
+            
         return ('', amount)
 
 
@@ -180,6 +248,10 @@ class Report(Storm):
             elif c == '>=':
                 expressions = self.buildAndOr(o, expressions, [ fieldObj >= a ])
 
+            elif c == '<=':
+                expressions = self.buildAndOr(o, expressions, [ fieldObj <= a ])
+                
+
         return expressions
 
 
@@ -284,7 +356,7 @@ class Report(Storm):
         for tran in self.trans:
            
             engage = tran.engage_date
-            close = tran.tchild.closing_date
+            close = tran.closing_date
             
             if not engage:
                 continue
@@ -313,7 +385,7 @@ class Report(Storm):
         for tran in self.trans:
            
             loi = tran.loi_date
-            close = tran.tchild.closing_date
+            close = tran.closing_date
             
             if not loi:
                 continue
@@ -354,7 +426,9 @@ class Report(Storm):
                     not_ontime += 1
 
         if ontime or not_ontime:
-            return (Dec(ontime) / Dec(ontime + not_ontime)) * 100
+            p = (Dec(ontime) / Dec(ontime + not_ontime)) * 100
+            p = "%.2f" % p
+            return p
         return 'N/A'
     
     
@@ -405,7 +479,9 @@ class Report(Storm):
             rent_amounts.append(rent)
 
         if rent_amounts:
-            return Dec(sum(rent_amounts)) / Dec(len(rent_amounts))
+            p = Dec(sum(rent_amounts)) / Dec(len(rent_amounts))
+            p = "%.2f" % p
+            return Dec(p)
         return 'N/A'
 
 
@@ -445,6 +521,8 @@ class Report(Storm):
         for tran in self.trans:
             if tran.survey_sent:
                 sent += 1
+            else:
+                continue
             if tran.survey_id:
                 received += 1
         if sent:
@@ -546,41 +624,3 @@ class Report(Storm):
             return Dec(p)
 
 
-    @property
-    def annual_survey(self):
-        """
-        Manual Input
-        """
-        return 'N/A'
-
-
-    @property
-    def lease_abstract_efficiency(self):
-        """
-        Manual Input
-        """
-        return 'N/A'
-
-
-    @property
-    def monthly_reporting_efficiency(self):
-        """
-        Manual Input
-        """
-        return 'N/A'
-
-
-    @property
-    def overall_client_satisfaction(self):
-        """
-        Manual Input ??
-        """
-        return 'N/A'
-
-
-    @property
-    def total_occupancy_cost(self):
-        """
-        Manual Input
-        """
-        return 'N/A'

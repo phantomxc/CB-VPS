@@ -77,26 +77,11 @@ class defaultReport:
 
     def POST(self):
         
-        today = datetime.date.today()
-        if today.month < 10:
-            year = int(today.year)
-            year = year - 1
-            fiscal_date = '%s-10-01' %  year
-        else:
-            fiscal_date = '%s-10-01' % today.year
-
-        filters = {
-            'objects':['Transaction'],
-            'fields':['eda'],
-            'constraints':['>='],
-            'args':[fiscal_date],
-            'operators':['none']
-        }
         i = web.input(comp_cbox=[], div_cbox=[], reg_cbox=[], area_cbox=[])
         
         reports = []
 
-        report = Report(client_id=i.client_id, trans_obj=i.trans_obj, filters=filters)
+        report = Report(client_id=i.client_id, trans_obj=i.trans_obj)
         report.buildReport()
         reports.append(report)
 
@@ -113,16 +98,36 @@ class buildReport:
         i = web.input(comp_cbox=[], div_cbox=[], reg_cbox=[], area_cbox=[])
         
         reports = []
-
+        
+        # COMBINED REPORT
         if i.display == 'Combined':
-            report = Report(client_id=i.client_id, companies=i.comp_cbox, divisions=i.div_cbox, regions=i.reg_cbox, areas=i.area_cbox, trans_obj=i.trans_obj)
+            report = Report(client_id=i.client_id, companies=i.comp_cbox, divisions=i.div_cbox, regions=i.reg_cbox, areas=i.area_cbox, trans_obj=i.trans_obj, fiscal=i.fiscal)
             report.buildReport()
             reports.append(report)
+
+        # SEPERATE REPORT
         else:
             for cid in i.comp_cbox:
-                report = Report(client_id=i.client_id, companies=[cid], divisions=i.div_cbox, regions=i.reg_cbox, areas=i.area_cbox, trans_obj=i.trans_obj)
+                report = Report(client_id=i.client_id, companies=[cid], trans_obj=i.trans_obj, fiscal=i.fiscal)
                 report.buildReport()
                 reports.append(report)
+
+            for did in i.div_cbox:
+                report = Report(client_id=i.client_id, divisions=[did], trans_obj=i.trans_obj, fiscal=i.fiscal)
+                report.buildReport()
+                reports.append(report)
+            
+            for rid in i.reg_cbox:
+                report = Report(client_id=i.client_id, regions=[rid], trans_obj=i.trans_obj, fiscal=i.fiscal)
+                report.buildReport()
+                reports.append(report)
+
+            for aid in i.area_cbox:
+                report = Report(client_id=i.client_id, areas=[aid], trans_obj=i.trans_obj, fiscal=i.fiscal)
+                report.buildReport()
+                reports.append(report)
+
+
 
         if i.trans_obj == 'acquisition':
             return jrender('/dashboard/acq_report.html', {'reports':reports})

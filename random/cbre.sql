@@ -21,7 +21,8 @@ create table transactions (
     engage_date date,
     rebc_entry_date date,
     survey_sent date,
-    loi_date date
+    loi_date date,
+    closing_date date
 );
 
 create table new_lease (
@@ -216,6 +217,7 @@ create table metrics (
     client_id integer,
     field text,
     title text,
+    operator text,
     warn_amount numeric,
     bad_amount numeric
 );
