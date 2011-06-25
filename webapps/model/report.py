@@ -74,32 +74,58 @@ class Report(Storm):
             year = int(today.year)
             year = year -1
             current_fiscal_year = '%s-10-01' % year
+            self.fy = year
             past_1_year = '%s-10-01' % (int(year) - 1)
             past_2_year = '%s-10-01' % (int(year) - 2)
         else:
             current_fiscal_year = '%s-10-01' % today.year
+            self.fy = today.year
             past_1_year = '%s-10-01' % int(today.year) - 1
             past_2_year = '%s-10-01' % int(today.year) - 2
 
+        def buildPreviousYear():
+            """
+            Build a report for 1 fiscal year ago
+            """
+            tmpfilters = {
+                'objects':['Transaction', 'Transaction'],
+                'fields':['cda', 'cda'],
+                'constraints':['<=', '>='],
+                'args':[current_fiscal_year, past_1_year],
+                'operators':['none', 'and']
+            }
+            self.year1 = Report(client_id=client_id, companies=companies, divisions=divisions, regions=regions, areas=areas, trans_obj=trans_obj, filters=tmpfilters)
+            self.year1.buildReport()
+            self.year1.fy1 = int(self.fy) - 1
+
+        def buildPreviousYear2():
+            """
+            Build a report for 2 fiscal years ago
+            """
+            tmpfilters = {
+                'objects':['Transaction', 'Transaction'],
+                'fields':['cda', 'cda'],
+                'constraints':['<', '>='],
+                'args':[past_1_year, past_2_year],
+                'operators':['none', 'and']
+            }
+            self.year2 = Report(client_id=client_id, companies=companies, divisions=divisions, regions=regions, areas=areas, trans_obj=trans_obj, filters=tmpfilters)
+            self.year2.buildReport()
+            self.year2.fy2 = int(self.fy) - 2
+
+            
         # Fiscal Comparison
         if 'fiscal' in kwargs.keys():
             f = kwargs['fiscal']
             if f == '1':
-                tmpfilters = {
-                    'objects':['Transaction', 'Transaction'],
-                    'fields':['cda', 'cda'],
-                    'constraints':['<=', '>='],
-                    'args':[current_fiscal_year, past_1_year],
-                    'operators':['none', 'and']
-                }
-                self.year1 = Report(client_id=client_id, companies=companies, divisions=divisions, regions=regions, areas=areas, trans_obj=trans_obj, filters=tmpfilters)
-                self.year1.buildReport()
-
+                buildPreviousYear()
             elif f == '1p':
                 pass
             elif f =='2p':
                 pass
             elif f =='2':
+                buildPreviousYear()
+                buildPreviousYear2()
                 pass
             else:
                 pass

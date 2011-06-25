@@ -33,6 +33,16 @@ table.report_table td.yellow {
 table.report_table tr.grey {
     background-color:#CCC;
 }
+table.report_table th {
+    font-size:12px;
+    text-align:center;
+}
+table.report_table span.fiscalyear {
+    font-size:10px;
+    position:relative;
+    top:-3px;
+    left:1px;
+}
 
 
 div.half_tab_padding {
@@ -98,7 +108,6 @@ span.coll_arrows.closed {
     background-repeat:no-repeat;
     background-position:6px 0px;
 }
-
 
 span.arrow_spacer {
     padding-left:30px;

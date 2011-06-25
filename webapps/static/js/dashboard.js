@@ -151,15 +151,28 @@ Dashboard.prototype = {
         Event.observe('dashboard_form', 'submit', function(event) {
             var act = (this.ltabs.chosen == this.ltabs.t1) ? 'acquisition': 'disposition';
             var act_div = (this.ltabs.chosen == this.ltabs.t1) ? $('acq') : $('disp');
-            $('dashboard_form').request({
-                parameters: {'trans_obj':act},
-                onSuccess: function(res) {
-                    act_div.update(res.responseText);
-                }
-            });
-            act_div.update('Loading');
-            
-            Event.stop(event);
+            if ($('export').getValue() == 'PDF') {
+                //------------
+                // PDF REQUEST
+                //------------
+                $('trans_obj').setValue(act);
+                var iframe = new Element('iframe', {'style':'display:none;'});
+                document.body.appendChild(iframe);
+                iframe.src = 'report?' + $('dashboard_form').serialize();
+            } else {
+                //-------------
+                // HTML REQUEST
+                //-------------
+                $('dashboard_form').request({
+                    parameters: {'trans_obj':act},
+                    onSuccess: function(res) {
+                        act_div.update(res.responseText);
+                    }
+                });
+                act_div.update('Loading');
+                
+                Event.stop(event);
+            }
         }.bind(this));
     },
 

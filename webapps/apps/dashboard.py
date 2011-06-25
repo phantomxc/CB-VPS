@@ -9,6 +9,18 @@ from model.filters import FieldTypes
 
 import datetime
 
+import ho.pisa as pisa
+import tempfile
+
+def fetch_resources(uri, rel):
+    """
+    callback to allow pisa to retrieve images
+    uri - is the href attribute from the html link element
+    rel - gives a relative path but not used
+    """
+    print uri
+    return uri
+
 urls = (
     '', 'dash',
     '/', 'dash',
@@ -130,6 +142,25 @@ class buildReport:
 
 
         if i.trans_obj == 'acquisition':
+            if i.export == 'PDF':
+                html = jrender('/dashboard/acq_report_pdf.html', {'reports':reports})
+                tmp = tempfile.TemporaryFile('w+b', prefix='tmp', suffix='.pdf')
+                pdf = pisa.CreatePDF(str(html), tmp, '/var/www/webapps/static/')
+                
+                tmp.seek(0, 2)
+                filesize = tmp.tell()
+                tmp.seek(0)
+
+                if pdf.err:
+                    print 'PDF ERROR'
+                if pdf.warn:
+                    print 'WARNING'
+
+                web.header('Content-Length', filesize)
+                web.header('Content-Type', 'application/pdf')
+                web.header('Content-Disposition', 'attachment; filename=%s' % 'Report.pdf')
+                return tmp.read()
+
             return jrender('/dashboard/acq_report.html', {'reports':reports})
         else:
             return jrender('/dashboard/disp_report.html', {'reports':reports})

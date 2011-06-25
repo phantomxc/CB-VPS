@@ -1,3 +1,5 @@
+[[ extends 'pdf_base.html' ]]
+[[ block content ]]
 [[ for report in reports ]]
     [[ if report.year1 ]]
         [[ set year1 = True ]]
@@ -9,7 +11,7 @@
 
     [[ if report.title ]]
         <div class="half_tab_padding">
-            <span class="green_bold"> [- report.title -] </span>
+            <span class="green_bold" style="color:green"> [- report.title -] </span>
         </div>
     [[ endif ]]
     <table class="report_table">
@@ -175,3 +177,4 @@
     </table>
 
 [[ endfor ]]
+[[ endblock ]]
