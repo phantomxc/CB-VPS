@@ -281,6 +281,27 @@ class Report(Storm):
         return expressions
 
 
+    def buildExcelData(self):
+        """
+        return a tuple of data to export to excel
+        """
+        if self.trans_obj == 'acquisition':
+            data = [
+                ['Average Survey Score', self.avg_survey_score],
+                ['Average Days to Business Terms', self.avg_days_business_terms],
+                ['Average Days to Deal Closing', self.avg_days_deal_close],
+                ['Days between Business Terms & Closing', self.avg_days_loi_to_deal_close],
+                ['Market Survey On Time %', self.market_survey_ontime],
+                ['Average Value Add %', self.avg_value_add],
+                ['Engagement %', '']
+            ]
+        title = self.title.replace('&#187', ' ')
+        title = title.replace(' ', '')
+        return (title, data, ['a', 'b'])
+
+
+
+
     # METRICS
 
     @property

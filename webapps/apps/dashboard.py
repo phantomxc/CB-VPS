@@ -6,20 +6,13 @@ from model.company import *
 from model.report import Report
 
 from model.filters import FieldTypes
+from model.filegen import *
 
 import datetime
 
 import ho.pisa as pisa
 import tempfile
 
-def fetch_resources(uri, rel):
-    """
-    callback to allow pisa to retrieve images
-    uri - is the href attribute from the html link element
-    rel - gives a relative path but not used
-    """
-    print uri
-    return uri
 
 urls = (
     '', 'dash',
@@ -160,6 +153,27 @@ class buildReport:
                 web.header('Content-Type', 'application/pdf')
                 web.header('Content-Disposition', 'attachment; filename=%s' % 'Report.pdf')
                 return tmp.read()
+
+            if i.export == 'XLS':
+                sheets = []
+                for r in reports:
+                    sheets.append(r.buildExcelData())
+
+                xls = make_excel(sheets)
+
+                xls.seek(0, 2)
+                filesize = xls.tell()
+                xls.seek(0)
+                
+                web.header('Content-Length', filesize)
+                web.header('Content-Type', 'application/excel')
+                web.header('Content-Disposition', 'attachment; filename=%s' % 'Report.xls')
+
+                return xls.read()
+
+
+                    
+
 
             return jrender('/dashboard/acq_report.html', {'reports':reports})
         else:

@@ -159,6 +159,14 @@ Dashboard.prototype = {
                 var iframe = new Element('iframe', {'style':'display:none;'});
                 document.body.appendChild(iframe);
                 iframe.src = 'report?' + $('dashboard_form').serialize();
+            } else if ($('export').getValue() == 'XLS') {
+                //------------
+                // XLS REQUEST
+                //------------
+                $('trans_obj').setValue(act);
+                var iframe = new Element('iframe', {'style':'display:none;'});
+                document.body.appendChild(iframe);
+                iframe.src = 'report?' + $('dashboard_form').serialize();
             } else {
                 //-------------
                 // HTML REQUEST
